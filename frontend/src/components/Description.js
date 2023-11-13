@@ -7,8 +7,9 @@ import { useTheme } from '@mui/material';
 import SendToMobileOutlinedIcon from '@mui/icons-material/SendToMobileOutlined';
 import GetAppOutlinedIcon from '@mui/icons-material/GetAppOutlined';
 import AddAPhotoOutlinedIcon from '@mui/icons-material/AddAPhotoOutlined';
+import Button from '@mui/material/Button';
 
-import DescriptionItem from './DescriptionItem';
+//import DescriptionItem from './DescriptionItem';
 {/*
 const Description = () => {
   const theme = useTheme();
@@ -104,24 +105,70 @@ const Description = () => {
           sx={{
             alignItems: 'center',
             flexDirection: 'column',
+            justifyContent: 'center', // Center items horizontally
+            textAlign: 'center',
             px: {
               md: '15px !important',
             },
           }}
         >
-        <Grid container data-aos='fade-up' width='180%'>
-          <DescriptionItem 
-              icon={<AddAPhotoOutlinedIcon style={{ height: 25, width: 25 }} />}
-              title='Select an Image'
-              subtitle='Select an image for classification and drag-and-drop it into the provided dropzone in the browser.'
-            />
-            <DescriptionItem
-              icon={
-                <SendToMobileOutlinedIcon style={{ height: 25, width: 25 }} />
-              }
-              title='Send the Image for Classification'
-              subtitle='Press the Send Image button to send the image to the machine learning model for classification.'
-            />
+        <Grid container data-aos='fade-up' width='100%' >
+          <Grid item xs={12} md={6}>
+            <Box width={1} height={1}>
+              <Box display='flex' flexDirection='column'>
+              <Button
+                  variant="contained"
+                  color="primary"
+                  size="xlarge"
+                  href="\classifier"
+                  sx={{
+                    height: '20em',
+                    marginRight: '1em',
+                    padding: '3em',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center', // Align content center horizontally
+                    justifyContent: 'center',
+                  }}
+                >
+                <Typography variant='h6' gutterBottom fontWeight={700} padding={5}>
+                Semantic Image Search
+                </Typography>
+                <Typography color={theme.palette.text.secondary}>
+                Description...
+                </Typography>
+              </Button>
+            </Box>
+            </Box>
+          </Grid>
+          <Grid item xs={12} md={6}>
+            <Box width={1} height={1}>
+              <Box display='flex' flexDirection='column'>
+              <Button
+                  variant="contained"
+                  color="primary"
+                  size="xlarge"
+                  href="\classifier"
+                  sx={{
+                    height: '20em',
+                    marginRight: '1em',
+                    padding: '3em',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center', // Align content center horizontally
+                    justifyContent: 'center',
+                  }}
+                >
+                <Typography variant='h6' gutterBottom fontWeight={700} padding={5}>
+                Image Captioning
+                </Typography>
+                <Typography color={theme.palette.text.secondary}>
+                Description...
+                </Typography>
+              </Button>
+            </Box>
+            </Box>
+          </Grid>
           </Grid>
         </Container>
       </Box>

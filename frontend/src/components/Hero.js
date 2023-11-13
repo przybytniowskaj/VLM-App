@@ -110,14 +110,14 @@ const Hero = () => {
           sx={{ order: { xs: 1, md: 1 } }}>
       <Box
         data-aos='fade-up'
-        padding={26}
+        padding={30}
       >
           <Button
             component='a'
             variant='outlined'
             color='primary'
             size='large'
-            href='#'
+            href='/#description'
             fullWidth={isMd ? false : true}
             disableElevation={true}
             sx={{

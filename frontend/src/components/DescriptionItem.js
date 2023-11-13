@@ -10,20 +10,25 @@ const DescriptionItem = ({ icon, title, subtitle }) => {
   const theme = useTheme();
 
   return (
-    <Grid item xs={8} md={3.8}>
+    <Grid item xs={12} md={6}>
       <Box width={1} height={1}>
-        <Box display='flex' flexDirection='column' alignItems='flex-start'>
+        <Box display='flex' flexDirection='column'>
         <Button
             variant="contained"
             color="primary"
-            size="large"
+            size="xlarge"
             sx={{
-              width: '75%', // Adjust the width as needed
-              marginBottom: theme.spacing(2),
+              height: '20em',
+              marginRight: '1em',
+              padding: '3em',
+              display: 'flex',
+              flexDirection: 'column',
+              alignItems: 'center', // Align content center horizontally
+              justifyContent: 'center',
             }}
           >
             {icon}
-          <Typography variant='h6' gutterBottom fontWeight={700}>
+          <Typography variant='h6' gutterBottom fontWeight={700} padding={5}>
             {title}
           </Typography>
           <Typography color={theme.palette.text.secondary}>
