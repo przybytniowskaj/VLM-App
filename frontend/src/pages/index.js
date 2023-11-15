@@ -10,9 +10,9 @@ import Spacer from '../components/Spacer';
 const Home = () => {
   return (
     <>
-      {/*<Head>
-        <title>Home | Image Classification</title>
-      </Head>*/} 
+      <Head>
+        <title>Home | VLM </title>
+      </Head>
       <Hero />
       {/*<CustomDivider /> */}
       <Description /> 

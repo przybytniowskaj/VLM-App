@@ -26,7 +26,8 @@
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-dropzone": "^14.2.2",
-    "react-lazy-load-image-component": "^1.5.4"
+    "react-lazy-load-image-component": "^1.5.4",
+    "react-modal": "^3.16.1"
   },
   "devDependencies": {
     "regenerator-runtime": "^0.13.9"

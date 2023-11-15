@@ -44,12 +44,12 @@ const App = ({
           content='minimum-scale=1, initial-scale=1, width=device-width'
           name='viewport'
         />
-        <meta name='description' content='Image Classification' />
+        <meta name='description' content='VLM' />
         <meta
           name='keywords'
           content='image, classification, machine learning'
         />
-        <title>Image Classification</title>
+        <title>VLM</title>
       </Head>
       <ThemeProvider theme={theme}>
         <CssBaseline />
@@ -66,5 +66,6 @@ App.propTypes = {
   emotionCache: PropTypes.object,
   pageProps: PropTypes.object.isRequired,
 };
+
 
 export default App;

@@ -13,54 +13,20 @@ import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 
-const Header = ({ onSidebarOpen }) => {
+const Header = ({ onSidebarOpen, title, color_back}) => {
   const theme = useTheme();
 
   return (
     <>
-      <AppBar
+      <AppBar id='appbar_header'
         elevation={5}
         sx={{
-          backgroundColor: theme.palette.primary.main,
+          backgroundColor: 'black',
           color: theme.palette.common.white,
         }}
       >
-        <Toolbar sx={{ minHeight: 70 }}>
-          <IconButton
-            color='inherit'
-            onClick={() => onSidebarOpen()}
-            sx={{ display: { md: 'none' } }}
-          >
-            <MenuIcon fontSize='medium' />
-          </IconButton>
-          <Link href='/' style={{ textDecoration: 'none' }}>
-            <Box sx={{ display: { md: 'inline', xs: 'none' } }}>
-              <IconButton size='large' disabled>
-                <CameraAltIcon
-                  style={{
-                    color: theme.palette.common.white,
-                    height: 30,
-                    width: 30,
-                  }}
-                />
-                <Typography
-                  component='h1'
-                  variant='h3'
-                  sx={{
-                    flexGrow: 1,
-                    color: theme.palette.common.white,
-                    fontWeight: 'bold',
-                    textDecoration: 'none',
-                    marginLeft: '10px',
-                  }}
-                >
-                
-                </Typography>
-              </IconButton>
-            </Box>
-          </Link>
-          <Box sx={{ flexGrow: 1 }} />
-          <Button
+        <Toolbar sx={{ minHeight: 60 }}>
+        <Button
             component='a'
             color='primary'
             href='/'
@@ -78,7 +44,11 @@ const Header = ({ onSidebarOpen }) => {
           >
             <HomeOutlinedIcon /> Home
           </Button>
-         {/*} <Button
+          <Box sx={{ flexGrow: 1 }} />
+          <Typography variant='h4'>
+            {title}
+          </Typography>
+         {/* <Button
             component='a'
             color='primary'
             href='/classifier'
@@ -98,7 +68,7 @@ const Header = ({ onSidebarOpen }) => {
             Classifier
           </Button> */}
         </Toolbar>
-        <Divider />
+        <Divider />        
       </AppBar>
     </>
   );

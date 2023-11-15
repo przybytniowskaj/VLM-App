@@ -120,7 +120,7 @@ const Description = () => {
                   variant="contained"
                   color="primary"
                   size="xlarge"
-                  href="\classifier"
+                  href="\imagesearch"
                   sx={{
                     height: '20em',
                     marginRight: '1em',

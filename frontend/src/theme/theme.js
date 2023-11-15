@@ -5,7 +5,8 @@ const theme = createTheme({
     mode: 'dark',
     background: {
       default: 'rgb(0,0,0)',
-      paper: 'rgb(35,35,35)',
+      paper: 'rgb(20, 20, 20)',
+      trans: 'rgba(x,y,z,0)',
     },
     primary: {
       main: 'rgb(20,20,20)',
@@ -53,8 +54,9 @@ const theme = createTheme({
     },
     h6: {
       fontSize: '1rem',
-      fontWeight: 500,
+      fontWeight: 400,
       lineHeight: 1.25,
+      textTransform: 'none'
     },
     overline: {
       fontWeight: 600,

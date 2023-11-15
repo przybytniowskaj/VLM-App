@@ -15,8 +15,15 @@ const Hero = () => {
     defaultMatches: true,
   });
 
+  const goToBottom = () => {
+    window.scrollTo({
+        top: document.documentElement.scrollHeight,
+        behavior: "smooth",
+    });
+  };
+
   return (
-    <Box height='850px' position={'flex'}
+    <Box height='60em' position={'flex'}
       sx={{
         backgroundImage: `url(https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)`,
         backgroundSize: '100% 110%',        
@@ -24,16 +31,13 @@ const Hero = () => {
         backgroundPosition: 'center center',
       }}
     >
-
-    
     <Box
       maxWidth={{ sm: 7120, md: 11236 }}
       width={1}
       margin='0 auto'
       paddingTop={10}
-      //backgroundColor={theme.palette.background.default}
       >
-      <Grid container spacing={4} marginTop='20px'>
+      <Grid container spacing={4} marginTop='0px'>
         <Grid item xs={12} md={6} sx={{ order: { xs: 2, md: 1 } }}>
           <Box data-aos={isMd ? 'fade-right' : 'fade-up'}>
             <Box marginBottom={2}>
@@ -112,12 +116,11 @@ const Hero = () => {
         data-aos='fade-up'
         padding={30}
       >
-          <Button
+          <Button onClick={goToBottom}
             component='a'
             variant='outlined'
             color='primary'
             size='large'
-            href='/#description'
             fullWidth={isMd ? false : true}
             disableElevation={true}
             sx={{
