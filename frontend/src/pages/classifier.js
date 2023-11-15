@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import Head from 'next/head';
 import Button from '@mui/material/Button';
@@ -10,6 +10,7 @@ import Grid from '@mui/material/Grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import { useTheme } from '@mui/material';
 
+import GenerateCaption from '../components/GenerateCaption';
 import ImageDropzone from '../components/ImageDropzone';
 import ClassifierButtons from '../components/ClassifierButtons';
 import ClassifierHeader from '../components/ClassifierHeader';
@@ -84,6 +85,7 @@ const Classifier = () => {
   const classifyAnother = () => {
     setImage(null);
   };
+  
 
   return (
     <>
@@ -126,7 +128,26 @@ const Classifier = () => {
                       alignItems='flex-start'
                       justifyContent='center'
                     >
+                      <Box flex="1" height="300px">
+
                       <ImageDropzone onDrop={handleDrop} />
+                      </Box>
+                      {files.length > 0 && !isLoading && (
+                  <Box flex="1" height="300px" marginLeft={2}>
+                    <img
+                      src={URL.createObjectURL(files[0])}
+                      alt={files[0].name}
+                      style={{
+                        width: '100%',
+                        height: '100%',
+                        objectFit: 'contain',
+                      }}
+                    />
+                    <Box flex='1' marginRight={2} color={theme.palette.text.secondary}>
+                      <GenerateCaption />
+                    </Box>
+                  </Box>
+                )}
                     </Box>
                     <Box
                       display='flex'
@@ -135,11 +156,13 @@ const Classifier = () => {
                       justifyContent='center'
                     >
                       {files.length > 0 && !isLoading && (
-                        <Box marginTop={2} color={theme.palette.text.secondary}>
+                        <Box flex='1' marginTop={2} color={theme.palette.text.secondary}>
                           Loaded image: <Button>{files[0].name}</Button>
                         </Box>
                       )}
                     </Box>
+                     
+                    
                   </CardContent>
                 </Card>
               </Grid>
