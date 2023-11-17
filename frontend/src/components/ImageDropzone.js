@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import Dropzone from 'react-dropzone';
 import Box from '@mui/material/Box';
 import Link from '@mui/material/Link';
@@ -13,6 +13,7 @@ library.add(ImageIcon);
 
 const ImageDropzone = ({ onDrop }) => {
   const theme = useTheme();
+
 
   return (
     <Dropzone onDrop={onDrop}>
@@ -42,7 +43,7 @@ const ImageDropzone = ({ onDrop }) => {
             }}
             {...getRootProps()}
           >
-            <input {...getInputProps()} />
+            <input multiple {...getInputProps()} />
             <Box
               sx={{
                 '& img': {

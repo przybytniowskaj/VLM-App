@@ -28,7 +28,7 @@ import CustomModal from './uploadWindow';
 const Classifier = () => {
   const theme = useTheme();
   const [imageUrls, setImageUrls] = useState([]);
-
+  const [uploadedFiles, setUploadedFiles] = useState([]);
  
   const [isModalOpen, setModalOpen] = useState(false);
   const [initialTab, setInitialTab] = useState(0); 
@@ -41,6 +41,18 @@ const Classifier = () => {
   const closeModal = () => {
     setModalOpen(false);
   };
+
+  useEffect(() => {
+    axios
+      .get('http://127.0.0.1:8000/api/classifier/')
+      .then((response) => {
+        console.log(response.data);
+        setImageUrls(response.data);
+      })
+      .catch((error) => {
+        console.error('Error fetching uploaded images:', error);
+      });
+  }, [uploadedFiles]);
 
   return (
     <>
@@ -67,12 +79,12 @@ const Classifier = () => {
           </Grid>
         <Grid item container xs={12} md={8} >
         <Grid container spacing={2} style={{ width: '90%'}}>
-              {Array.from({ length: 9 }, (_, index) => (
-                <Grid item key={index} xs={8} sm={3} md={4} >
+        {imageUrls.map((imageUrl, index) => (
+                <Grid item key={index} xs={8} sm={3} md={4}>
                   <Card>
                     <CardContent>
                       <img
-                        src={imageUrls}
+                        src={imageUrl}
                         alt={`Image ${index + 1}`}
                         style={{ width: '100%', height: '100%', objectFit: 'cover' }}
                       />

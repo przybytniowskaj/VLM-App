@@ -6,7 +6,11 @@ import Tab from '@mui/material/Tab';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import CloseIcon from '@mui/icons-material/Close';
-
+import { useTheme } from '@mui/material';
+import CardContent from '@mui/material/CardContent';
+import Container from '@mui/material/Container';
+import Grid from '@mui/material/Grid';
+import Card from '@mui/material/Card';
 
 import ImageDropzone from '../components/ImageDropzone';
 import LinearProgress from '@mui/material/LinearProgress';
@@ -16,72 +20,110 @@ import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
 const UploadFromDevice = () => {
-    const [loading, setLoading] = useState(false);
-    const [uploadedFiles, setUploadedFiles] = useState([]);
-  
-    const handleDrop = async (acceptedFiles) => {
-        setLoading(true);
+    const theme = useTheme();
+    const [files, setFiles] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [image, setImage] = useState(null);
+    const [imageUrls, setImageUrls] = useState([]);
+
+    const handleDrop = (files) => {
+      setIsLoading(true);
+      setFiles(files);
     
-        try {
-          const formData = new FormData();
-          formData.append('image', acceptedFiles[0]);
+      // Read each file and update imageUrls
+      const filePromises = files.map((file) => {
+        return new Promise((resolve) => {
+          const reader = new FileReader();
+          reader.onloadend = () => {
+            resolve(reader.result);
+          };
+          reader.readAsDataURL(file);
+        });
+      });
     
-          // Upload the image file
-          const response = await axios.post('http://127.0.0.1:8000/api/classifier/', formData, {
-            headers: {
-              'Content-Type': 'multipart/form-data',
-            },
-          });
-    
-          // Handle the response if needed
-          console.log('Image uploaded successfully:', response.data);
-    
-          // Simulate an API call duration
-          setTimeout(() => {
-            setUploadedFiles(acceptedFiles);
-            setLoading(false);
-          }, 2000);
-        } catch (error) {
-          console.error('Error uploading image:', error);
-          setLoading(false);
+      Promise.all(filePromises).then((results) => {
+        setImageUrls(results);
+        setIsLoading(false);
+      });
+    };
+
+    const loadImage = (files) => {
+      setTimeout(() => {
+        setFiles(files);
+        if (setFiles.length) {
+          setIsLoading(false);
         }
-      };
-    
-    const handleSearch = () => {
-        // Handle search logic, e.g., fetch image URLs
-        setLoading(true);
-        // Simulate fetching image URLs (replace with actual logic)
-        setTimeout(() => {
-          setLoading(false);
-        }, 2000);
-      };
+        setImage(null);
+      }, 3000);
+    };
+
+    const sendData = () => {
+      
+    };
+ 
   
-    return (
-        <Box>
-      <ImageDropzone onDrop={handleDrop} />
-      {loading && <LinearProgress variant="indeterminate" />}
-      {uploadedFiles.length > 0 && (
-        <Box>
-          <Typography variant="subtitle1" color="textSecondary" mt={2}>
-            Files Uploaded:
-          </Typography>
-          <ul>
-            {uploadedFiles.map((file) => (
-              <li key={file.name}>{file.name}</li>
-            ))}
-          </ul>
-        </Box>
-      )}
-      <TextField label="Type a phrase" variant="outlined" fullWidth />
-      <Button
-        variant="contained"
-        color="primary"
-        style={{ marginTop: '10px' }}
-        onClick={handleSearch}
-      >
-        Search
-      </Button>
-    </Box>
+    return (        <Container maxWidth={false}>
+        <Grid container spacing={3}>
+          <Grid
+            item
+            container
+            alignItems='center'
+            justifyContent='space-between'
+            marginTop='-30px'
+            spacing={3}
+            xs={12}
+          >
+            <Grid item xs={12}>
+              {isLoading && (
+                <Box marginBottom={3} marginTop={2}>
+                  <LinearProgress color='success' />
+                </Box>
+              )}
+            </Grid>
+          </Grid>
+          {!image && (
+            <Grid item xs={12}>
+              <Card>
+                <CardContent>
+                  <Box
+                    display='flex'
+                    flexDirection='row'
+                    alignItems='flex-start'
+                    justifyContent='center'
+                  >
+                    <Box flex="1" height="300px">
+
+                    <ImageDropzone onDrop={handleDrop} />
+                    </Box>
+                  </Box>
+                  <Box
+                    display='flex'
+                    flexDirection='row'
+                    alignItems='flex-start'
+                    justifyContent='center'
+                  >
+                    {files.length > 0 && !isLoading && (
+                      <Box flex='1' marginTop={2} color={'white'}>
+                      Loaded images:
+                      <ul style={{ columns: '3', listStyleType: 'none', padding: '0' }}>
+                      {files.map((file, index) => (
+                        <li key={index} style={{ marginBottom: '8px', textAlign: 'left' }}>
+                            {file.name}
+                        </li>
+                      ))}
+                        </ul>
+                    </Box>
+                    )}
+                  </Box>
+                  
+                  
+                </CardContent>
+              </Card>
+            </Grid>
+          )}
+        </Grid>
+      </Container>
+    
     );
   };
   
@@ -143,4 +185,32 @@ const UploadFromDevice = () => {
         <Button variant="contained" color="primary" style={{ marginTop: '10px' }}>
           Search
         </Button>
-      </Box>*/}
+      </Box>
+      
+      
+      Box>
+      <ImageDropzone onDrop={handleDrop} />
+      {loading && <LinearProgress variant="indeterminate" />}
+      {uploadedFiles.length > 0 && (
+        <Box>
+          <Typography variant="subtitle1" color="textSecondary" mt={2}>
+            Files Uploaded:
+          </Typography>
+          <ul>
+            {uploadedFiles.map((file) => (
+              <li key={file.name}>{file.name}</li>
+            ))}
+          </ul>
+        </Box>
+      )}
+      <TextField label="Type a phrase" variant="outlined" fullWidth />
+      <Button
+        variant="contained"
+        color="primary"
+        style={{ marginTop: '10px' }}
+        onClick={handleSearch}
+      >
+        Search
+      </Button>
+    </Box>
+      */}
