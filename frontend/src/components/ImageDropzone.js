@@ -13,8 +13,6 @@ library.add(ImageIcon);
 
 const ImageDropzone = ({ onDrop }) => {
   const theme = useTheme();
-
-
   return (
     <Dropzone onDrop={onDrop}>
       {({ isDragActive, getRootProps, getInputProps }) => (
@@ -24,23 +22,13 @@ const ImageDropzone = ({ onDrop }) => {
             border={1}
             borderRadius={1}
             borderStyle='dashed'
-            borderColor={theme.palette.divider}
+            border={theme.palette.divider}
             display='flex'
             flexWrap='wrap'
             justifyContent='center'
             outline='none'
             padding={6}
-            sx={{
-              ...(isDragActive && {
-                backgroundColor: theme.palette.action.active,
-                opacity: 0.5,
-              }),
-              '&:hover': {
-                backgroundColor: theme.palette.action.hover,
-                cursor: 'pointer',
-                opacity: 0.5,
-              },
-            }}
+            
             {...getRootProps()}
           >
             <input multiple {...getInputProps()} />

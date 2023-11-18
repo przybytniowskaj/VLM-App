@@ -15,6 +15,7 @@ import Card from '@mui/material/Card';
 import ImageDropzone from '../components/ImageDropzone';
 import LinearProgress from '@mui/material/LinearProgress';
 import TextField from '@mui/material/TextField';
+import Input from '@mui/material/Input';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
@@ -27,69 +28,50 @@ const UploadFromDevice = () => {
     const [imageUrls, setImageUrls] = useState([]);
     const [textInputValue, setTextInputValue] = useState('');
 
-  const handleTextChange = (event) => {
-    setTextInputValue(event.target.value);
+    
+    const handleTextChange = (event) => {
+      setTextInputValue(event.target.value);
     };
 
     const handleDrop = (files) => {
-      setIsLoading(true);
       setFiles(files);
       setImage(null);
-      loadImage(files);
-      // Read each file and update imageUrls
+      setIsLoading(false);
     };
 
     const loadImage = (files) => {
+      setIsLoading(true);
+    
+      // Simulate loading by setting a timeout
       setTimeout(() => {
-        setFiles(files);
-        if (setFiles.length) {
-          setIsLoading(false);
-        }
-        setImage(null);
+        setIsLoading(false);
       }, 3000);
     };
   
-    const sendData = () => {
-      setFiles([]);
+    const sendData = async () => {
       setIsLoading(true);
   
       const formData = new FormData();
-      formData.append('image', files[0], files[0].name);
-      formData.append('text', textInputValue);
+      for (let i = 0; i < files.length; i++) {
+        formData.append('images', files[i]);
+      }
+      formData.append('query', textInputValue);
   
-      axios
-        .post('http://127.0.0.1:8000/api/classifier/', formData, {
+      try {
+        const response = await axios.post('http://127.0.0.1:8000/api/semanticImageSearch/semantic_image_search/', formData, {
           headers: {
-            accept: 'application/json',
-            'content-type': 'multipart/form-data',
+            'Content-Type': 'multipart/form-data',
           },
-        })
-        .then((response) => {
-          getClassificationResult(response);
-        })
-        .catch((err) => console.log(err));
-    };
+        });
   
-    const getClassificationResult = (obj) => {
-      axios
-        .get(`http://127.0.0.1:8000/api/classifier/${obj.data.id}/`, {
-          headers: {
-            accept: 'application/json',
-          },
-        })
-        .then((response) => {
-          setImage(response);
-        })
-        .catch((err) => console.log(err));
-  
-      setIsLoading(false);
-    };
-  
-    const classifyAnother = () => {
-      setImage(null);
+        console.log(response.data);
+        setIsLoading(false);
+      } catch (error) {
+        console.error(error);
+        setIsLoading(false);
+      }
     };
     
-  
     return ( 
         <Grid container spacing={3}>
           <Grid
@@ -107,7 +89,6 @@ const UploadFromDevice = () => {
           <Grid item xs={12}>
             {isLoading && (<LinearProgress color='success' data-aos='zoom-out'/> )}
           </Grid>
-          {!image && (
             <Grid item xs={12}>
                   <Box
                     display='flex'
@@ -116,7 +97,6 @@ const UploadFromDevice = () => {
                     justifyContent='center'
                   >
                     <Box flex="0.95" height="auto">
-
                     <ImageDropzone onDrop={handleDrop} />
                     </Box>
                   </Box>
@@ -124,15 +104,13 @@ const UploadFromDevice = () => {
                     <TextField
                       label=" Type description for desired photos..."
                       variant="outlined"
-                      border={1}
-                      borderRadius={1}
-                      borderColor={theme.palette.divider}
+                      border={theme.palette.divider}
                       value={textInputValue}
                       fullWidth
                       onChange={handleTextChange}
                     />
                   </Box>
-              
+            
                   <Box
                     display='flex'
                     flexDirection='row'
@@ -141,11 +119,12 @@ const UploadFromDevice = () => {
                     padding={6}
                     paddingTop={1}
                   >
-                    {files.length > 0 && (
+                    {files.length > 0 && !isLoading &&(
                       <Box flex='1' color={'white'} >
                       Loaded images:
                         <ul style={{ listStyleType: 'none', padding: 0, columns: `${Math.min(3, files.length)}` }}>
                         {files.map((file, index) => (
+                          
                           <li key={index} style={{ marginBottom: '1em', textAlign: 'center' }}>
                             {file.name}
                           </li>
@@ -158,8 +137,6 @@ const UploadFromDevice = () => {
                     Search
                   </Button>
             </Grid>
-          )}
-          
         </Grid>
         
     );

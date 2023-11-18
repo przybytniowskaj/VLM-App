@@ -6,3 +6,4 @@ class ClassifierSerializer(serializers.ModelSerializer):
   class Meta:
     model = Classifier
     fields = '__all__'
+
