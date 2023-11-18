@@ -47,7 +47,7 @@ const ImageDropzone = ({ onDrop }) => {
             <Box
               sx={{
                 '& img': {
-                  width: 100,
+                  width: 80,
                 },
               }}
             />
@@ -56,8 +56,8 @@ const ImageDropzone = ({ onDrop }) => {
                 <FontAwesomeIcon
                   icon={ImageIcon}
                   style={{
-                    height: 100,
-                    width: 100,
+                    height: 80,
+                    width: 80,
                     color: theme.palette.text.secondary,
                   }}
                 />

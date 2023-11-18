@@ -23,15 +23,15 @@ import capitalizeFirstLetter from '../utils/capitalizeFirstLetter';
 import Typography from '@mui/material/Typography';
 import Header from '../layout/Header';
 import CustomModal from './uploadWindow';
+import TextField from '@mui/material/TextField';
 
 
 const Classifier = () => {
   const theme = useTheme();
-  const [imageUrls, setImageUrls] = useState([]);
-  const [uploadedFiles, setUploadedFiles] = useState([]);
- 
+  const [textInputValue, setTextInputValue] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
   const [initialTab, setInitialTab] = useState(0); 
+  const [image, setImage] = useState(null);
 
   const openModal = (tab) => {
     setInitialTab(tab);
@@ -41,18 +41,26 @@ const Classifier = () => {
   const closeModal = () => {
     setModalOpen(false);
   };
+  
+  const handleTextChange = (event) => {
+    setTextInputValue(event.target.value);
+  };
 
-  useEffect(() => {
+  const getClassificationResult = (obj) => {
     axios
-      .get('http://127.0.0.1:8000/api/classifier/')
-      .then((response) => {
-        console.log(response.data);
-        setImageUrls(response.data);
+      .get(`http://127.0.0.1:8000/api/classifier/`, {
+        headers: {
+          accept: 'application/json',
+        },
       })
-      .catch((error) => {
-        console.error('Error fetching uploaded images:', error);
-      });
-  }, [uploadedFiles]);
+      .then((response) => {
+        setImage(response);
+      })
+      .catch((err) => console.log(err));
+
+    setIsLoading(false);
+  };
+
 
   return (
     <>
@@ -78,20 +86,23 @@ const Classifier = () => {
             </Box>
           </Grid>
         <Grid item container xs={12} md={8} >
-        <Grid container spacing={2} style={{ width: '90%'}}>
-        {imageUrls.map((imageUrl, index) => (
+        <TextField
+            label="Type a phrase"
+            variant="outlined"
+            style={{ width: '90%' }}
+            value={textInputValue}
+            onChange={handleTextChange}
+          />
+        <Grid container spacing={2} style={{ height: '90%', width: '90%'}}>
+        {!image && (Array.from({ length: 9 }, (_, index) => (
                 <Grid item key={index} xs={8} sm={3} md={4}>
-                  <Card>
-                    <CardContent>
                       <img
-                        src={imageUrl}
+                        src={`https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
                         alt={`Image ${index + 1}`}
-                        style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                        style={{ width: '80%', height: '80%', objectFit: 'cover' }}
                       />
-                    </CardContent>
-                  </Card>
                 </Grid>
-              ))}
+              )))}
             </Grid>
         </Grid>
         

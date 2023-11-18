@@ -25,26 +25,18 @@ const UploadFromDevice = () => {
     const [isLoading, setIsLoading] = useState(false);
     const [image, setImage] = useState(null);
     const [imageUrls, setImageUrls] = useState([]);
+    const [textInputValue, setTextInputValue] = useState('');
+
+  const handleTextChange = (event) => {
+    setTextInputValue(event.target.value);
+    };
 
     const handleDrop = (files) => {
       setIsLoading(true);
       setFiles(files);
-    
+      setImage(null);
+      loadImage(files);
       // Read each file and update imageUrls
-      const filePromises = files.map((file) => {
-        return new Promise((resolve) => {
-          const reader = new FileReader();
-          reader.onloadend = () => {
-            resolve(reader.result);
-          };
-          reader.readAsDataURL(file);
-        });
-      });
-    
-      Promise.all(filePromises).then((results) => {
-        setImageUrls(results);
-        setIsLoading(false);
-      });
     };
 
     const loadImage = (files) => {
@@ -56,74 +48,120 @@ const UploadFromDevice = () => {
         setImage(null);
       }, 3000);
     };
-
-    const sendData = () => {
-      
-    };
- 
   
-    return (        <Container maxWidth={false}>
+    const sendData = () => {
+      setFiles([]);
+      setIsLoading(true);
+  
+      const formData = new FormData();
+      formData.append('image', files[0], files[0].name);
+      formData.append('text', textInputValue);
+  
+      axios
+        .post('http://127.0.0.1:8000/api/classifier/', formData, {
+          headers: {
+            accept: 'application/json',
+            'content-type': 'multipart/form-data',
+          },
+        })
+        .then((response) => {
+          getClassificationResult(response);
+        })
+        .catch((err) => console.log(err));
+    };
+  
+    const getClassificationResult = (obj) => {
+      axios
+        .get(`http://127.0.0.1:8000/api/classifier/${obj.data.id}/`, {
+          headers: {
+            accept: 'application/json',
+          },
+        })
+        .then((response) => {
+          setImage(response);
+        })
+        .catch((err) => console.log(err));
+  
+      setIsLoading(false);
+    };
+  
+    const classifyAnother = () => {
+      setImage(null);
+    };
+    
+  
+    return ( 
         <Grid container spacing={3}>
           <Grid
             item
             container
             alignItems='center'
             justifyContent='space-between'
-            marginTop='-30px'
+            marginTop='-40px'
             spacing={3}
             xs={12}
+            padding={6}
           >
-            <Grid item xs={12}>
-              {isLoading && (
-                <Box marginBottom={3} marginTop={2}>
-                  <LinearProgress color='success' />
-                </Box>
-              )}
-            </Grid>
+            
+          </Grid>
+          <Grid item xs={12}>
+            {isLoading && (<LinearProgress color='success' data-aos='zoom-out'/> )}
           </Grid>
           {!image && (
             <Grid item xs={12}>
-              <Card>
-                <CardContent>
                   <Box
                     display='flex'
                     flexDirection='row'
                     alignItems='flex-start'
                     justifyContent='center'
                   >
-                    <Box flex="1" height="300px">
+                    <Box flex="0.95" height="auto">
 
                     <ImageDropzone onDrop={handleDrop} />
                     </Box>
                   </Box>
+                  <Box padding={4} fullWidth>
+                    <TextField
+                      label=" Type description for desired photos..."
+                      variant="outlined"
+                      border={1}
+                      borderRadius={1}
+                      borderColor={theme.palette.divider}
+                      value={textInputValue}
+                      fullWidth
+                      onChange={handleTextChange}
+                    />
+                  </Box>
+              
                   <Box
                     display='flex'
                     flexDirection='row'
                     alignItems='flex-start'
                     justifyContent='center'
+                    padding={6}
+                    paddingTop={1}
                   >
-                    {files.length > 0 && !isLoading && (
-                      <Box flex='1' marginTop={2} color={'white'}>
+                    {files.length > 0 && (
+                      <Box flex='1' color={'white'} >
                       Loaded images:
-                      <ul style={{ columns: '3', listStyleType: 'none', padding: '0' }}>
-                      {files.map((file, index) => (
-                        <li key={index} style={{ marginBottom: '8px', textAlign: 'left' }}>
+                        <ul style={{ listStyleType: 'none', padding: 0, columns: `${Math.min(3, files.length)}` }}>
+                        {files.map((file, index) => (
+                          <li key={index} style={{ marginBottom: '1em', textAlign: 'center' }}>
                             {file.name}
-                        </li>
-                      ))}
-                        </ul>
+                          </li>
+                        ))}
+                      </ul>
                     </Box>
                     )}
                   </Box>
-                  
-                  
-                </CardContent>
-              </Card>
+                  <Button variant="contained" color="primary" style={{ marginTop: '10px' }} onClick={sendData}>
+                    Search
+                  </Button>
             </Grid>
           )}
+          
         </Grid>
-      </Container>
-    
+        
     );
   };
   
