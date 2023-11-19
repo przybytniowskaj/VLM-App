@@ -15,4 +15,5 @@ class SemanticImageSearch(models.Model):
     images = models.ManyToManyField(Image)
 
     def __str__(self):
-        return 'Semantic search for "{}" uploaded at {}'.format(self.query, self.date_uploaded.strftime('%Y-%m-%d %H:%M'))
+        result_str = f'Result: {self.result}' if getattr(self, 'result', None) else 'No result yet'
+        return f'Image classified at {self.date_uploaded.strftime("%Y-%m-%d %H:%M")}. {result_str}'

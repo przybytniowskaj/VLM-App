@@ -32,8 +32,8 @@ INSTALLED_APPS = [
   'corsheaders',
 
   # Local
-  'classifier',
-  'semanticImageSearch'
+  'classifier'
+  
 ]
 
 MIDDLEWARE = [

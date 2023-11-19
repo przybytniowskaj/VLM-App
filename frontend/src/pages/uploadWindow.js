@@ -58,7 +58,7 @@ const UploadFromDevice = () => {
       formData.append('query', textInputValue);
   
       try {
-        const response = await axios.post('http://127.0.0.1:8000/api/semanticImageSearch/semantic_image_search/', formData, {
+        const response = await axios.post('http://127.0.0.1:8000/api/semanticimagesearch/semantic_image_serach', formData, {
           headers: {
             'Content-Type': 'multipart/form-data',
           },

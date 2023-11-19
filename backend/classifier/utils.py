@@ -14,7 +14,6 @@ def perform_semantic_search(query, images):
         image_preprocessed = preprocess(Image.open(image)).unsqueeze(0).to(device)
         image_features.append(model.encode_image(image_preprocessed))
 
-    print(query)
     text_preprocessed = clip.tokenize([query]).to(device)
     text_features = model.encode_text(text_preprocessed)
     
@@ -28,4 +27,5 @@ def perform_semantic_search(query, images):
 
     # Update the result field
     result = ', '.join([f"Image {index + 1}" for index, _ in ranked_images])
+    print(result)
     return result

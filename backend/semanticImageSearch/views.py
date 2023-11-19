@@ -31,3 +31,16 @@ class SearchViewSet(viewsets.ModelViewSet):
         return Response({'message': 'Semantic search successful.'})
       except Exception as e:
             return Response({'error': str(e)})
+
+    
+    @action(detail=False, methods=['get'])
+    def get_semantic_image_search(self, request):
+        try:
+            # Your logic to retrieve and return semantic search results for GET requests
+            # Example: Retrieve the latest SemanticImageSearch instance
+            latest_semantic_search = SemanticImageSearch.objects.latest('date_created')
+            result = latest_semantic_search.result
+
+            return Response({'result': result})
+        except Exception as e:
+            return Response({'error': str(e)})
