@@ -1,15 +1,16 @@
-import cv2
-import ssl
+
 import numpy as np
 import tensorflow as tf
 from django.db import models
 
 from transformers import BlipProcessor, BlipForConditionalGeneration
-import torch
-import os
+
 import config.settings as settings
 from PIL import Image
 import PIL.Image
+from .utils import perform_semantic_search
+from rest_framework.response import Response
+import ssl
 
 class Classifier(models.Model):
   image = models.ImageField(upload_to='images')
@@ -21,7 +22,6 @@ class Classifier(models.Model):
 
   def save(self, *args, **kwargs):
     try:
-      # SSL certificate necessary so we can download weights of the InceptionResNetV2 model
       ssl._create_default_https_context = ssl._create_unverified_context
       processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
       model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")  
@@ -51,9 +51,4 @@ class SemanticImageSearch(models.Model):
     images = models.ManyToManyField(Image)
 
     def __str__(self):
-        result_str = f'Result: {self.result}' if getattr(self, 'result', None) else 'No result yet'
-        return f'Image classified at {self.date_uploaded.strftime("%Y-%m-%d %H:%M")}. {result_str}'
-
-    def save(self, *args, **kwargs):
-
-      return 
+      return 'Semantic search for "{}" uploaded at {}'.format(self.query, self.date_uploaded.strftime('%Y-%m-%d %H:%M'))

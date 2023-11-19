@@ -20,12 +20,10 @@ import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Typography from '@mui/material/Typography';
 
-const UploadFromDevice = () => {
+const UploadFromDevice = ({ closeModal, sendDataToMainPage }) => {
     const theme = useTheme();
     const [files, setFiles] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [image, setImage] = useState(null);
-    const [imageUrls, setImageUrls] = useState([]);
     const [textInputValue, setTextInputValue] = useState('');
 
     
@@ -35,7 +33,6 @@ const UploadFromDevice = () => {
 
     const handleDrop = (files) => {
       setFiles(files);
-      setImage(null);
       setIsLoading(false);
     };
 
@@ -53,25 +50,43 @@ const UploadFromDevice = () => {
   
       const formData = new FormData();
       for (let i = 0; i < files.length; i++) {
-        formData.append('images', files[i]);
+        formData.append('images', files[i], files[i].name);
       }
       formData.append('query', textInputValue);
-  
-      try {
-        const response = await axios.post('http://127.0.0.1:8000/api/semanticimagesearch/semantic_image_serach', formData, {
-          headers: {
-            'Content-Type': 'multipart/form-data',
-          },
-        });
-  
-        console.log(response.data);
+      const query = textInputValue;
+      const images = files;
+
+    axios({
+          method: 'post',
+          url: 'http://127.0.0.1:8000/api/semanticimagesearch/semantic_image_search/',
+          data: formData
+      }).then(function (response) {
+
+        getClassificationResult(response);
         setIsLoading(false);
-      } catch (error) {
-        console.error(error);
-        setIsLoading(false);
-      }
+        sendDataToMainPage(response.data);
+        closeModal();
+      }).catch(function (error) {
+          console.log(error);
+          setIsLoading(false);
+      })
     };
-    
+
+    const getClassificationResult = (obj) => {
+      axios
+        .get(`http://127.0.0.1:8000/api/semanticimagesearch/get_semantic_image_search`, {
+          headers: {
+            accept: 'application/json',
+          },
+        })
+        .then((response) => {
+          setTextInputValue(response.data.result);
+        })
+        .catch((err) => console.log(err));
+  
+      setIsLoading(false);
+    };
+
     return ( 
         <Grid container spacing={3}>
           <Grid
@@ -147,7 +162,7 @@ const UploadFromDevice = () => {
   );
 
 
- const PopupWindow = ({ isOpen, onRequestClose, initialTab }) => {
+ const PopupWindow = ({ isOpen, onRequestClose, initialTab, sendDataToMainPage }) => {
     const [activeTab, setActiveTab] = useState(initialTab);
   
     const handleTabChange = (_, newValue) => {
@@ -181,7 +196,7 @@ const UploadFromDevice = () => {
                 <Tab label="Upload from Catalog" icon={<PhotoLibraryIcon />} />
             </Tabs>
             <CloseIcon style={{ cursor: 'pointer', position: 'absolute', top: '20px', right: '20px' }} onClick={onRequestClose}/>          
-            {activeTab === 0 && <UploadFromDevice />}
+            {activeTab === 0 && <UploadFromDevice closeModal={onRequestClose} sendDataToMainPage={sendDataToMainPage}/>}
             {activeTab === 1 && <UploadFromCatalog />}
         </Modal>
       );

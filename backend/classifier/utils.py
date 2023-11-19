@@ -4,7 +4,6 @@ import clip
 from PIL import Image
 
 def perform_semantic_search(query, images):
-    # Load CLIP model and processor
     device = "cuda" if torch.cuda.is_available() else "cpu"
     model, preprocess = clip.load("ViT-B/16", device=device)
 
@@ -24,8 +23,7 @@ def perform_semantic_search(query, images):
 
     # Rank images based on similarity
     ranked_images = sorted(enumerate(similarities), key=lambda x: x[1], reverse=True)
-
     # Update the result field
-    result = ', '.join([f"Image {index + 1}" for index, _ in ranked_images])
-    print(result)
-    return result
+    # result = ', '.join([f"Image {index + 1}" for index, _ in ranked_images])
+    # print('tutaj cos')
+    return [x for x, y in ranked_images]

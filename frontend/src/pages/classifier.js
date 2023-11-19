@@ -53,6 +53,7 @@ const Classifier = () => {
 
     const formData = new FormData();
     formData.append('image', files[0], files[0].name);
+    console.log(formData);
 
     axios
       .post('http://127.0.0.1:8000/api/classifier/', formData, {

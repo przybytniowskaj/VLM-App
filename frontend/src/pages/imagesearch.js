@@ -32,6 +32,7 @@ const Classifier = () => {
   const [isModalOpen, setModalOpen] = useState(false);
   const [initialTab, setInitialTab] = useState(0); 
   const [image, setImage] = useState(null);
+  const [imageDataFromModal, setImageDataFromModal] = useState(null);
 
   const openModal = (tab) => {
     setInitialTab(tab);
@@ -46,21 +47,17 @@ const Classifier = () => {
     setTextInputValue(event.target.value);
   };
 
-  const getClassificationResult = (obj) => {
-    axios
-      .get(`http://127.0.0.1:8000/api/classifier/`, {
-        headers: {
-          accept: 'application/json',
-        },
-      })
-      .then((response) => {
-        setImage(response);
-      })
-      .catch((err) => console.log(err));
-
-    setIsLoading(false);
+  const sendDataToMainPage = (data) => {
+    axios.get(`http://127.0.0.1:8000/api/semanticimagesearch/get_semantic_image_search`, {
+          headers: {
+            accept: 'application/json',
+          },
+        })
+        .then((response) => {
+          setTextInputValue(response.data.query);
+        })
+        .catch((err) => console.log(err));
   };
-
 
   return (
     <>
@@ -112,7 +109,7 @@ const Classifier = () => {
       </Box>
       <Spacer sx={{ pt: 6 }} />
 
-      <CustomModal isOpen={isModalOpen} onRequestClose={closeModal} initialTab={initialTab} />
+      <CustomModal isOpen={isModalOpen} onRequestClose={closeModal} initialTab={initialTab}  sendDataToMainPage={sendDataToMainPage}/>
       </>
   );
 };
