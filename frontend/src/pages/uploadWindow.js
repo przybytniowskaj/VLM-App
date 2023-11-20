@@ -39,10 +39,15 @@ const UploadFromDevice = ({ closeModal, sendDataToMainPage }) => {
     const loadImage = (files) => {
       setIsLoading(true);
     
-      // Simulate loading by setting a timeout
       setTimeout(() => {
         setIsLoading(false);
       }, 3000);
+    };
+
+    const handleEnterKeyPress = (event) => {
+      if (event.key === 'Enter') {
+        sendData();
+      }
     };
   
     const sendData = async () => {
@@ -53,16 +58,12 @@ const UploadFromDevice = ({ closeModal, sendDataToMainPage }) => {
         formData.append('images', files[i], files[i].name);
       }
       formData.append('query', textInputValue);
-      const query = textInputValue;
-      const images = files;
 
     axios({
           method: 'post',
           url: 'http://127.0.0.1:8000/api/semanticimagesearch/semantic_image_search/',
           data: formData
       }).then(function (response) {
-        console.log(response.data)
-        console.log("bl bla")
         setIsLoading(false);
         sendDataToMainPage(response.data);
         closeModal();
@@ -102,12 +103,13 @@ const UploadFromDevice = ({ closeModal, sendDataToMainPage }) => {
                   </Box>
                   <Box padding={4} fullWidth>
                     <TextField
-                      label=" Type description for desired photos..."
+                      label=" Type key word for photos and press enter"
                       variant="outlined"
                       border={theme.palette.divider}
                       value={textInputValue}
                       fullWidth
                       onChange={handleTextChange}
+                      onKeyDown={handleEnterKeyPress}
                     />
                   </Box>
             
@@ -133,9 +135,6 @@ const UploadFromDevice = ({ closeModal, sendDataToMainPage }) => {
                     </Box>
                     )}
                   </Box>
-                  <Button variant="contained" color="primary" style={{ marginTop: '10px' }} onClick={sendData}>
-                    Search
-                  </Button>
             </Grid>
         </Grid>
         

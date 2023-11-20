@@ -33,6 +33,14 @@ const Classifier = () => {
   const [initialTab, setInitialTab] = useState(0); 
   const [result, setResult] = useState(null);
   const [images, setImages] = useState(null);
+  const [isLoading, setIsLoading] = useState(false);
+  const defaultPhotos = [`https://images.unsplash.com/photo-1504598318550-17eba1008a68?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDJ8fHRyYXZlbHxlbnwwfHwwfHx8MA%3D%3D`,
+  `https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8dHJhdmVsfGVufDB8fDB8fHww`,
+                           `https://plus.unsplash.com/premium_photo-1677343210638-5d3ce6ddbf85?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dHJhdmVsfGVufDB8fDB8fHww`,
+                           `https://images.unsplash.com/photo-1469474968028-56623f02e42e?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NzN8fHRyYXZlbHxlbnwwfHwwfHx8MA%3D%3D`,
+                           `https://plus.unsplash.com/premium_photo-1675484743423-57da4e8011c2?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8OXx8dHJhdmVsfGVufDB8fDB8fHww`,
+                          `https://images.unsplash.com/photo-1539635278303-d4002c07eae3?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MjB8fHRyYXZlbHxlbnwwfHwwfHx8MA%3D%3D`,
+                        ]
 
   const openModal = (tab) => {
     setInitialTab(tab);
@@ -60,6 +68,36 @@ const Classifier = () => {
         .catch((err) => console.log(err));
   };
 
+  const handleEnterKeyPress = (event) => {
+    if (event.key === 'Enter') {
+      sendData();
+    }
+  };
+
+  const sendData = async () => {
+    setIsLoading(true);
+
+    const formData = new FormData();
+    for (let i = 0; i < images.length; i++) {
+      formData.append('images', images[i], images[i].name);
+    }
+    formData.append('query', textInputValue);
+
+  axios({
+        method: 'post',
+        url: 'http://127.0.0.1:8000/api/semanticimagesearch/semantic_image_search/',
+        data: formData
+    }).then(function (response) {
+      setIsLoading(false);
+      sendDataToMainPage(response.data);
+      closeModal();
+    }).catch(function (error) {
+        console.log(error);
+        setIsLoading(false);
+    })
+  };
+
+
   return (
     <>
     <Header title='Semantic Image Search' />
@@ -68,55 +106,52 @@ const Classifier = () => {
         paddingTop={10}
       >
       <Grid container spacing={4} style={{ height: '80vh' }}>
-      <Grid item xs={12} md={4} style={{ height: '60%', marginTop: '8%'}}>
-            <Box
-              display="flex"
-              flexDirection="column"
-              justifyContent="space-between"
-              height="100%"
-            >
+      <Grid item xs={12} md={4} style={{ height: '60%', marginTop: '8%', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+      <TextField
+      label="Type key word for photos and press enter"
+      variant="outlined"
+      style={{ width: '80%', marginBottom: '20px' }}
+      value={textInputValue}
+      onChange={handleTextChange}
+      onKeyDown={handleEnterKeyPress}
+    />
+    <Grid item xs={4}>
+            {isLoading && (<LinearProgress color='success' data-aos='zoom-out'/> )}
+          </Grid>
               <Button variant="contained" color="primary" onClick={() => openModal(0)} style={{ width: '80%', height: '40%', margin: '20px auto', flexGrow: 1 }}>
                 <Typography variant='h6'>Upload photos from device</Typography>
               </Button>
               <Button variant="contained" color="primary" onClick={() => openModal(1)} style={{ width: '80%', height: '40%', margin: '20px auto', flexGrow: 1 }}>
                 <Typography variant='h6'>Choose photos from catalog</Typography>
               </Button>
-            </Box>
           </Grid>
         <Grid item container xs={12} md={8} >
-        <TextField
-            label="Type a phrase"
-            variant="outlined"
-            style={{ width: '90%' }}
-            value={textInputValue}
-            onChange={handleTextChange}
-          />
-        <Grid container spacing={2} alignItems={'center'} style={{ height: '90%', width: '90%'}}>
-        {!result && (Array.from({ length: 9 }, (_, index) => (
-          <Grid item key={index} xs={8} sm={3} md={4} alignItems={'center'}>
+        <Grid container spacing={1} style={{ height: '80vh',width:'90%', marginTop:'1vh', alignItems: 'center', justifyContent: 'center' }}>
+        {!result && (defaultPhotos.map((photo, index) => (    
+        
+           <Grid item key={index} sm={6} md={4} lg={4} alignItems={'center'} align-content='flex-start' style={{ marginBottom: '2px' }}>
+          <a href={photo} target="_blank" rel="noopener noreferrer">
             <img
-              src={`https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
+              src={photo}
               alt={`Image ${index + 1}`}
-              style={{ width: '80%', height: '80%', objectFit: 'cover' }}
-            s/>
-          </Grid>
-        )))}
-        <Grid container spacing={2} alignItems={'center'} style={{marginTop: '-40%', width: '100%', display: "flex"}}>
-          {result && (
+              style={{ width: '70%', height: '70%', objectFit: 'cover' }}
+            />
+          </a>
+        </Grid>
+        )))}  
+        {result && ( 
             result.map((index) => (
-              <Grid item key={index} sm={6} md={4} lg={3} alignItems={'center'} style={{ marginBottom: '2px' }}>
+              <Grid item key={index} sm={6} md={4} lg={4} alignItems={'center'} align-content='flex-start' style={{ marginBottom: '2px' }}>
                 <a href={`http://127.0.0.1:8000/${images[index].image}`} target="_blank" rel="noopener noreferrer">
                   <img
                     src={`http://127.0.0.1:8000/${images[index].image}`}
                     alt={`Image ${index + 1}`}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                    style={{ width: '90%', height: '90%', objectFit: 'cover' }}
                   />
                 </a>
               </Grid>
             ))
           )}
-        </Grid>
-        )))}
         </Grid>
         </Grid>
         

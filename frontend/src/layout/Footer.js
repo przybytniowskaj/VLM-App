@@ -42,17 +42,7 @@ const Footer = () => {
                         variant='body2'
                         color={theme.palette.text.secondary}
                       >
-                        Photo by{' '}
-                        <Link
-                          href='https://unsplash.com/@joshwp'
-                          alt='Josh Power'
-                          target='_blank'
-                          rel='noreferrer'
-                          color={theme.palette.text.secondary}
-                        >
-                          Josh Power
-                        </Link>{' '}
-                        on{' '}
+                        Photos from 
                         <Link
                           href='https://unsplash.com/photos/FWoH2qhLb5I'
                           alt='Unsplash'
