@@ -7,8 +7,4 @@ router = routers.DefaultRouter()
 router.register(r'semanticimagesearch', SearchViewSet)
 router.register(r'classifier', ClassifierViewSet)
 
-
-
-urlpatterns = [
-  path('', include(router.urls)),
-]
+urlpatterns = router.urls

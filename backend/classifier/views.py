@@ -39,18 +39,24 @@ class SearchViewSet(viewsets.ModelViewSet):
         # print("poka to")
         # print(images_list)
         # print('nie umiem')
-        result = perform_semantic_search(query, images)        
+        result = perform_semantic_search(query, images)  
+        print("siema")
+        print(result)
+        result_str = ', '.join(result)
+        print(result_str)
+        semantic_search.result = result_str
+        semantic_search.save()
         # print(result)
-        result2 = [semantic_search.images[i] for i in result]
+        # result2 = [semantic_search.images[i] for i in result]
         # print("resulttt")
         # print(result2)
-        r2_string = ', '.join([result])
+        # r2_string = ', '.join([f"{elem}"for elem in result])
         # print('result_str:')
         # print(r2_string)
         # print(result2)
         # semantic_search.images = result2
-        semantic_search.result = r2_string
-        semantic_search.save()
+        # semantic_search.result = r2_string
+        # semantic_search.save()
 
         return Response({'message': 'Semantic search successful.'})
       except Exception as e:

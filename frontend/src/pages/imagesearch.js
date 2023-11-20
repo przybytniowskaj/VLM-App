@@ -31,8 +31,8 @@ const Classifier = () => {
   const [textInputValue, setTextInputValue] = useState('');
   const [isModalOpen, setModalOpen] = useState(false);
   const [initialTab, setInitialTab] = useState(0); 
-  const [image, setImage] = useState(null);
-  const [imageDataFromModal, setImageDataFromModal] = useState(null);
+  const [result, setResult] = useState(null);
+  const [images, setImages] = useState(null);
 
   const openModal = (tab) => {
     setInitialTab(tab);
@@ -49,12 +49,13 @@ const Classifier = () => {
 
   const sendDataToMainPage = (data) => {
     axios.get(`http://127.0.0.1:8000/api/semanticimagesearch/get_semantic_image_search`, {
-          headers: {
-            accept: 'application/json',
-          },
-        })
-        .then((response) => {
-          setTextInputValue(response.data.query);
+        headers: {
+          accept: 'application/json',
+        },
+      }).then((response) => {
+        setTextInputValue(response.data.query);
+        setResult(response.data.result.split(',').map((item) => parseInt(item.trim(), 10)));
+        setImages(response.data.images);
         })
         .catch((err) => console.log(err));
   };
@@ -91,16 +92,32 @@ const Classifier = () => {
             onChange={handleTextChange}
           />
         <Grid container spacing={2} alignItems={'center'} style={{ height: '90%', width: '90%'}}>
-        {!image && (Array.from({ length: 9 }, (_, index) => (
-                <Grid item key={index} xs={8} sm={3} md={4} alignItems={'center'}>
-                      <img
-                        src={`https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
-                        alt={`Image ${index + 1}`}
-                        style={{ width: '80%', height: '80%', objectFit: 'cover' }}
-                      />
-                </Grid>
-              )))}
-            </Grid>
+        {!result && (Array.from({ length: 9 }, (_, index) => (
+          <Grid item key={index} xs={8} sm={3} md={4} alignItems={'center'}>
+            <img
+              src={`https://images.unsplash.com/photo-1506744038136-46273834b3fb?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D`}
+              alt={`Image ${index + 1}`}
+              style={{ width: '80%', height: '80%', objectFit: 'cover' }}
+            s/>
+          </Grid>
+        )))}
+        <Grid container spacing={2} alignItems={'center'} style={{marginTop: '-40%', width: '100%', display: "flex"}}>
+          {result && (
+            result.map((index) => (
+              <Grid item key={index} sm={6} md={4} lg={3} alignItems={'center'} style={{ marginBottom: '2px' }}>
+                <a href={`http://127.0.0.1:8000/${images[index].image}`} target="_blank" rel="noopener noreferrer">
+                  <img
+                    src={`http://127.0.0.1:8000/${images[index].image}`}
+                    alt={`Image ${index + 1}`}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover' }}
+                  />
+                </a>
+              </Grid>
+            ))
+          )}
+        </Grid>
+        )))}
+        </Grid>
         </Grid>
         
         

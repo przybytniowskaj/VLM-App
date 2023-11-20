@@ -42,11 +42,11 @@ class Image(models.Model):
     image = models.ImageField(upload_to='images')
 
     def __str__(self):
-        return 'Image uploaded at {}'.format(self.date_uploaded.strftime('%Y-%m-%d %H:%M'))
+        return self.image.url
 
 class SemanticImageSearch(models.Model):
     query = models.TextField()
-    result = models.CharField(max_length=250, blank=True, null=True)
+    result = models.CharField(max_length=250, blank=True)
     date_uploaded = models.DateTimeField(auto_now_add=True)
     images = models.ManyToManyField(Image)
 

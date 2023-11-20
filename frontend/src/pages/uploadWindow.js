@@ -61,8 +61,8 @@ const UploadFromDevice = ({ closeModal, sendDataToMainPage }) => {
           url: 'http://127.0.0.1:8000/api/semanticimagesearch/semantic_image_search/',
           data: formData
       }).then(function (response) {
-
-        getClassificationResult(response);
+        console.log(response.data)
+        console.log("bl bla")
         setIsLoading(false);
         sendDataToMainPage(response.data);
         closeModal();
@@ -70,21 +70,6 @@ const UploadFromDevice = ({ closeModal, sendDataToMainPage }) => {
           console.log(error);
           setIsLoading(false);
       })
-    };
-
-    const getClassificationResult = (obj) => {
-      axios
-        .get(`http://127.0.0.1:8000/api/semanticimagesearch/get_semantic_image_search`, {
-          headers: {
-            accept: 'application/json',
-          },
-        })
-        .then((response) => {
-          setTextInputValue(response.data.result);
-        })
-        .catch((err) => console.log(err));
-  
-      setIsLoading(false);
     };
 
     return ( 
