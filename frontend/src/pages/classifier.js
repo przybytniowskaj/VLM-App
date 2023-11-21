@@ -255,7 +255,7 @@ const Classifier = () => {
             ): (
               
               <>
-              
+              <Box>
               <Box 
               alignItems='center'
               justifyContent='space-between'
@@ -277,6 +277,7 @@ const Classifier = () => {
               </Box>
               <Box color={theme.palette.text.secondary} marginBottom={2} >
                 <GenerateCaption classificationResult="" />
+              </Box>
               </Box>
               
             </>
