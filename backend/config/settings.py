@@ -12,20 +12,21 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-dr6(w&0-s8($%f&1$i8md4ns#f0j8ioe2op+-4n3v5g02v3zxz'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 
 # Application definition
 
 INSTALLED_APPS = [
-  'django.contrib.admin',
+    'django.contrib.admin',
   'django.contrib.auth',
   'django.contrib.contenttypes',
   'django.contrib.sessions',
   'django.contrib.messages',
   'django.contrib.staticfiles',
+  'django.contrib.sites',
 
   # 3rd party
   'rest_framework',
@@ -63,6 +64,10 @@ TEMPLATES = [
       ],
     },
   },
+]
+
+CORD_ORIGIN_WHITELIST = [
+  "http://127.0.0.1:3000"
 ]
 
 WSGI_APPLICATION = 'config.wsgi.application'
@@ -130,5 +135,4 @@ CORS_ORIGIN_ALLOW_ALL = True
 FILE_UPLOAD_PERMISSIONS = 0o640
 
 FILE_UPLOAD_HANDLERS = [
- "django.core.files.uploadhandler.MemoryFileUploadHandler",
  "django.core.files.uploadhandler.TemporaryFileUploadHandler",]

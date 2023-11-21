@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import Classifier, SemanticImageSearch
+from .models import Classifier, SemanticImageSearch, Image
 
 
 class ClassifierSerializer(serializers.ModelSerializer):
@@ -7,9 +7,15 @@ class ClassifierSerializer(serializers.ModelSerializer):
     model = Classifier
     fields = '__all__'
 
+class ImageSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = Image
+        fields = ['image']
 
 class SemanticImageSearchSerializer(serializers.ModelSerializer):
-  class Meta:
-    model = SemanticImageSearch
-    fields = '__all__'
+    images = ImageSerializer(many=True, read_only=True)
+
+    class Meta:
+        model = SemanticImageSearch
+        fields = ['query', 'result', 'date_uploaded', 'images']
 
