@@ -1,28 +1,28 @@
 import React, { useState, useEffect } from 'react';
 import { Box, TextField } from '@mui/material';
 
-const GenerateCaption = ({ theme }) => {
+const GenerateCaption = ({ classificationResult
+ }) => {
   const [generatedText, setGeneratedText] = useState('');
   
 
   useEffect(() => {
     // Tutaj możesz umieścić kod do generowania tekstu przez model
     // np. wywołanie odpowiedniego API, funkcji itp.
-    const textFromModel = "Tekst wygenerowany przez model";
+    const textFromModel = classificationResult;
     setGeneratedText(textFromModel);
   }, []);
 
   return (
-    <Box flex='1' marginRight={2}  >
+    <Box width="500px" alignItems={'center'} bgcolor="white" padding={2} >
       <TextField
-        label="Generated Image Caption"
         variant="outlined"
         fullWidth
         value={generatedText}
         readOnly
         InputProps={{
-            style: { color: 'white', fontWeight: 'bold' },
-          }}
+          style: { color: 'black', fontWeight: 'bold' },
+        }}
       />
     </Box>
   );
