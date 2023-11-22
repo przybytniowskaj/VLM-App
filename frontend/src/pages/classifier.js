@@ -26,6 +26,7 @@ import UploadWindowCaptioning from './uploadWindowCaptioning';
 const Classifier = () => {
   const theme = useTheme();
   const [files, setFiles] = useState([]);
+  const [files2, setFiles2] = useState([]);
   const [isLoading, setIsLoading] = useState(false);
   const [image, setImage] = useState(null);
   const [initialTab, setInitialTab] = useState(0);
@@ -44,6 +45,7 @@ const Classifier = () => {
 
   const handleImageUpload = (uploadedFiles) => {
     setFiles(uploadedFiles);
+    setFiles2(uploadedFiles)
     loadImage(uploadedFiles);
     // You may want to call sendData() here if you want to automatically send the data
     // sendData();
@@ -244,6 +246,15 @@ const Classifier = () => {
                         objectFit: 'contain',
                       }}
                     /> */}
+                    <img
+                src={files2.length > 0 ? URL.createObjectURL(files2[0]) : ""}
+                alt={files2[0]?.name || "Uploaded Image"}
+                style={{
+                  width: '100%',
+                  height: '100%',
+                  objectFit: 'contain',
+                }}
+              />
                     </Box>
                     <Box color={theme.palette.text.secondary}
                      marginBottom={2} >
@@ -266,15 +277,16 @@ const Classifier = () => {
               bgcolor={'white'}
               marginBottom={2} 
               padding={2}>
+              {files.length > 0 && (
               <img
-                src={files.length > 0 ? URL.createObjectURL(files[0]) : ""}
-                alt={files[0]?.name || "Uploaded Image"}
+                src={files2.length > 0 ? URL.createObjectURL(files2[0]) : ""}
+                alt={files2[0]?.name || "Uploaded Image"}
                 style={{
                   width: '100%',
                   height: '100%',
                   objectFit: 'contain',
                 }}
-              />
+              /> )}
               </Box>
               <Box color={theme.palette.text.secondary} marginBottom={2} >
                 <GenerateCaption classificationResult="" />
