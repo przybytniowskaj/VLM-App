@@ -1,13 +1,7 @@
 import React from 'react';
-import Box from '@mui/material/Box';
-import Grid from '@mui/material/Grid';
-import Typography from '@mui/material/Typography';
-import { useTheme, useMediaQuery } from '@mui/material';
-import { LazyLoadImage } from 'react-lazy-load-image-component';
-import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
+import { Box, Button, Grid, Typography, useTheme, useMediaQuery } from '@mui/material';
 
-import HeroButtons from '../components/HeroButtons';
-import Button from '@mui/material/Button';
+import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 
 const Hero = () => {
   const theme = useTheme();
@@ -62,48 +56,9 @@ const Hero = () => {
                 Tu bym dala opis czym sa VLMs
               </Typography>
             </Box>
-            <HeroButtons />
           </Box>
         </Grid>
-        <Grid
-          item
-          container
-          alignItems='center'
-          justifyContent='center'
-          xs={12}
-          md={6}
-          sx={{ order: { xs: 1, md: 2 } }}
-        >
-          <Box
-            sx={{
-              height: { xs: 'auto', md: 1 },
-              '& img': {
-                objectFit: 'cover',
-              },
-              '& .lazy-load-image-loaded': {
-                height: 1,
-                width: 1,
-              },
-            }}
-          >
-            {/*<Box
-              component={LazyLoadImage}
-              src={'/images/img1.jpg'}
-              alt='Hero'
-              effect='blur'
-              height={{ xs: 'auto', md: 1 }}
-              maxHeight={{ xs: 300, md: 1 }}
-              width={1}
-              maxWidth={1}
-              borderRadius={2}
-            />*/}
-          </Box> 
-        </Grid>
-        
-        
       </Grid>
-      
-      
     </Box>
     <Grid item
           container
@@ -129,7 +84,6 @@ const Hero = () => {
               marginRight: '15px',
               fontSize: '20px',
               border: `2px solid transparent`,
-              //backgroundColor: `${theme.palette.background.paper}`,
               color: 'white',
               '&:hover': {
                 backgroundColor: `${theme.palette.background.paper}`,

@@ -1,13 +1,5 @@
 import React from 'react';
-import Box from '@mui/material/Box';
-import Divider from '@mui/material/Divider';
-import Grid from '@mui/material/Grid';
-import Hidden from '@mui/material/Hidden';
-import Link from '@mui/material/Link';
-import List from '@mui/material/List';
-import ListItemButton from '@mui/material/ListItemButton';
-import ListItemText from '@mui/material/ListItemText';
-import Typography from '@mui/material/Typography';
+import { Box, Divider, Grid, Hidden, Link, List, ListItemButton, ListItemText, Typography } from '@mui/material';
 import { useTheme } from '@mui/material';
 
 const Footer = () => {
@@ -19,7 +11,6 @@ const Footer = () => {
         backgroundColor={theme.palette.background.default}
         paddingTop='1px'
         paddingBottom='1px'
-        // sticky footer - see four values below
         position='fixed'
         bottom='0'
         left='0'
@@ -42,7 +33,7 @@ const Footer = () => {
                         variant='body2'
                         color={theme.palette.text.secondary}
                       >
-                        Photos from 
+                        Photos from   
                         <Link
                           href='https://unsplash.com/photos/FWoH2qhLb5I'
                           alt='Unsplash'
@@ -50,7 +41,7 @@ const Footer = () => {
                           rel='noreferrer'
                           color={theme.palette.text.secondary}
                         >
-                          Unsplash
+                        {' '}  Unsplash
                         </Link>
                         .
                       </Typography>
