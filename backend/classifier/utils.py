@@ -5,7 +5,7 @@ from PIL import Image
 
 def perform_semantic_search(query, images):
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    model, preprocess = clip.load("ViT-B/32", device=device)
+    model, preprocess = clip.load("ViT-L/14", device=device)
 
     image_features = []
     image_paths = []
@@ -24,12 +24,6 @@ def perform_semantic_search(query, images):
         similarity = torch.nn.functional.cosine_similarity(text_features, image_feature, dim=1)
         similarities.append(similarity.item())
 
-    # filtered_similarities = [index for index, sim in enumerate(similarities) if sim > threshold]
-    # print(similarities)
-    # # Rank images based on similarity
-    # ranked_images = [f"{index}" for index, _ in sorted(enumerate(filtered_similarities), key=lambda x: x[1], reverse=True)]
-    # Update the result field
-    # result = ', '.join([f"Image {index + 1}" for index, _ in ranked_images])
     threshold = 0.15
     filtered_similarities = [index for index, sim in enumerate(similarities) if sim > threshold]
     ranked_images = sorted(filtered_similarities, key=lambda x: similarities[x], reverse=True)

@@ -96,50 +96,45 @@ const Classifier = () => {
     <>
     <Header title='Semantic Image Search' />
     <Box
-        backgroundColor={theme.palette.background.default}
-        marginTop={10}
-      >
+      backgroundColor={theme.palette.background.default}
+      marginTop={10}
+    >
       <Grid container spacing={4} style={{ height: '80vh' }}>
       
-      <Grid item xs={12} md={4} position='fixed' style={{ width:'100%', height: '60%', marginTop: '4%', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
-      <TextField
-        label="Type phrase and press enter"
-        variant="outlined"
-        style={{ width: '80%', marginBottom: '20px', color:'white' }}
-        value={textInputValue}
-        onChange={handleTextChange}
-        onKeyDown={handleEnterKeyPress}
-        marginBottom={2}
-      />
-      
-    
-              <Button variant="contained" disableElevation={true} color="primary" onClick={() => openModal(0)} style={{ width: '80%', height: '40%', margin: '4% auto', flexGrow: 1 }}>
-                <Typography variant='h6'>Upload photos from device</Typography>
-              </Button>
-              <Button variant="contained" color="primary" onClick={() => openModal(1)} style={{ width: '80%', height: '40%', margin: '4% auto', flexGrow: 1 }}>
-                <Typography variant='h6'>Choose photos from catalog</Typography>
-              </Button>
-          </Grid>
-        <Grid item container xs={12} md={8} style={{ marginLeft:'35%' }}>
-        
-              <Box  style={{ width: '85%', marginBottom: '1%'}}>
-                {isLoading && (<LinearProgress color='success' />)}
-              </Box>
-        <Grid container spacing={1} style={{ height: '85vh',width:'90%', alignItems: 'center', justifyContent: 'center' }}>
-        {!result && (defaultPhotos.map((photo, index) => (    
-        
-           <Grid item key={index} sm={6} md={4} lg={4} alignItems={'center'} align-content='flex-start' style={{ marginBottom: '2px' }}>
-          <a href={photo} target="_blank" rel="noopener noreferrer">
-            <img
-              src={photo}
-              alt={`Image ${index + 1}`}
-              style={{ width: '75%', height: '75%', objectFit: 'cover' }}
-            />
-          </a>
+        <Grid item xs={12} md={4} position='fixed' style={{ width:'100%', height: '60%', marginTop: '4%', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+          <TextField
+            label="Type phrase and press enter"
+            variant="outlined"
+            style={{ width: '80%', marginBottom:'10%', color:'white' }}
+            value={textInputValue}
+            onChange={handleTextChange}
+            onKeyDown={handleEnterKeyPress}
+          />
+          <Button variant="contained" disableElevation={true} color="primary" onClick={() => openModal(0)} style={{ width: '80%', height: '40%', margin: '4% auto', flexGrow: 1 }}>
+            <Typography variant='h6'>Upload photos from device</Typography>
+          </Button>
+          <Button variant="contained" color="primary" onClick={() => openModal(1)} style={{ width: '80%', height: '40%', margin: '4% auto', flexGrow: 1 }}>
+            <Typography variant='h6'>Choose photos from catalog</Typography>
+          </Button>
         </Grid>
-        )))}  
-        {result && ( 
-            result.map((index) => (
+        <Grid item container xs={12} md={8} style={{ marginLeft:'35%' }}>
+          <Box  style={{ width: '85%', marginBottom: '1%'}}>
+            {isLoading && (<LinearProgress color='success' />)}
+          </Box>
+          <Grid container spacing={1} style={{ height: '85vh',width:'90%', alignItems: 'center', justifyContent: 'center' }}>
+            {!result && (defaultPhotos.map((photo, index) => (    
+            
+              <Grid item key={index} sm={6} md={4} lg={4} alignItems={'center'} align-content='flex-start' style={{ marginBottom: '2px' }}>
+              <a href={photo} target="_blank" rel="noopener noreferrer">
+                <img
+                  src={photo}
+                  alt={`Image ${index + 1}`}
+                  style={{ width: '75%', height: '75%', objectFit: 'cover' }}
+                />
+              </a>
+            </Grid>
+            )))}  
+            {result && ( result.map((index) => (
               <Grid item key={index} sm={6} md={4} lg={4} alignItems={'center'} align-content='flex-start' style={{ marginBottom: '2px' }}>
                 <a href={`http://127.0.0.1:8000/${images[index].image}`} target="_blank" rel="noopener noreferrer">
                   <img
@@ -149,14 +144,11 @@ const Classifier = () => {
                   />
                 </a>
               </Grid>
-              
-            ))
-          )}
-        </Grid>
+            )))}  
+          </Grid>
         </Grid>
       </Grid>
       </Box>
-      
       <CustomModal isOpen={isModalOpen} onRequestClose={closeModal} initialTab={initialTab}  sendDataToMainPage={sendDataToMainPage}/>
       </>
   );

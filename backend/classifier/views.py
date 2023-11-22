@@ -27,37 +27,16 @@ class SearchViewSet(viewsets.ModelViewSet):
       try:
         query = request.data.get('query')
         images = request.FILES.getlist('images')
-        # print(images)
         semantic_search = SemanticImageSearch.objects.create(query=query)
 
-        # Associate images with the SemanticImageSearch instance
         images_list = []
         for image_file in images:
             semantic_search.images.create(image=image_file)
             images_list.append(image_file)
-        # Perform semantic search logic and update the result field
-        # print("poka to")
-        # print(images_list)
-        # print('nie umiem')
+            
         result = perform_semantic_search(query, images)  
-        print(result)
-        # print("siema")
-        # print(result)
-        # result_str = ', '.join(result)
-        # print(result_str)
         semantic_search.result = result
         semantic_search.save()
-        # print(result)
-        # result2 = [semantic_search.images[i] for i in result]
-        # print("resulttt")
-        # print(result2)
-        # r2_string = ', '.join([f"{elem}"for elem in result])
-        # print('result_str:')
-        # print(r2_string)
-        # print(result2)
-        # semantic_search.images = result2
-        # semantic_search.result = r2_string
-        # semantic_search.save()
 
         return Response({'message': 'Semantic search successful.'})
       except Exception as e:
@@ -66,10 +45,7 @@ class SearchViewSet(viewsets.ModelViewSet):
     @action(detail=False, methods=['get'])
     def get_semantic_image_search(self, request):
         try:
-            # Retrieve the latest SemanticImageSearch instance
             latest_semantic_search = SemanticImageSearch.objects.latest('date_uploaded')
-            
-            # Serialize the result
             serializer = SemanticImageSearchSerializer(latest_semantic_search)
 
             return JsonResponse(serializer.data)

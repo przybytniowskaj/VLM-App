@@ -13,7 +13,6 @@ const UploadFromDevice = ({ closeModal, sendDataToMainPage }) => {
     const [files, setFiles] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
     const [textInputValue, setTextInputValue] = useState('');
-
     
     const handleTextChange = (event) => {
       setTextInputValue(event.target.value);
@@ -21,26 +20,17 @@ const UploadFromDevice = ({ closeModal, sendDataToMainPage }) => {
 
     const handleDrop = (files) => {
       setFiles(files);
-      setIsLoading(false);
-    };
-
-    const loadImage = (files) => {
-      setIsLoading(true);
-    
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 3000);
     };
 
     const handleEnterKeyPress = (event) => {
       if (event.key === 'Enter') {
+        setFiles(files);
         sendData();
       }
     };
   
     const sendData = async () => {
       setIsLoading(true);
-      console.log(files);
       const formData = new FormData();
       for (let i = 0; i < files.length; i++) {
         formData.append('images', files[i], files[i].name);
@@ -63,69 +53,56 @@ const UploadFromDevice = ({ closeModal, sendDataToMainPage }) => {
 
     return ( 
         <Grid container spacing={3}>
-          <Grid
-            item
-            container
-            alignItems='center'
-            justifyContent='space-between'
-            marginTop='-40px'
-            spacing={3}
-            xs={12}
-            padding={6}
-          >
-            
-          </Grid>
-          <Grid item xs={12}>
+          <Grid item xs={12} padding={6}>
             {isLoading && (<LinearProgress color='success' data-aos='zoom-out'/> )}
           </Grid>
-            <Grid item xs={12}>
-                  <Box
-                    display='flex'
-                    flexDirection='row'
-                    alignItems='flex-start'
-                    justifyContent='center'
-                  >
-                    <Box flex="0.95" height="auto">
-                    <ImageDropzone onDrop={handleDrop} />
-                    </Box>
-                  </Box>
-                  <Box padding={4} fullWidth>
-                    <TextField
-                      label=" Type key word for photos and press enter"
-                      variant="outlined"
-                      border={theme.palette.divider}
-                      value={textInputValue}
-                      fullWidth
-                      onChange={handleTextChange}
-                      onKeyDown={handleEnterKeyPress}
-                    />
-                  </Box>
+          <Grid item xs={12}>
+            <Box
+              display='flex'
+              flexDirection='row'
+              alignItems='flex-start'
+              justifyContent='center'
+            >
+              <Box flex="0.95" height="auto">
+                <ImageDropzone onDrop={handleDrop} />
+              </Box>
+            </Box>
+            <Box padding={4} fullWidth>
+              <TextField
+                label=" Type key word for photos and press enter"
+                variant="outlined"
+                border={theme.palette.divider}
+                value={textInputValue}
+                fullWidth
+                onChange={handleTextChange}
+                onKeyDown={handleEnterKeyPress}
+              />
+            </Box>
             
-                  <Box
-                    display='flex'
-                    flexDirection='row'
-                    alignItems='flex-start'
-                    justifyContent='center'
-                    padding={6}
-                    paddingTop={1}
-                  >
-                    {files.length > 0 && !isLoading &&(
-                      <Box flex='1' color={'white'} >
-                      Loaded images:
-                        <ul style={{ listStyleType: 'none', padding: 0, columns: `${Math.min(3, files.length)}` }}>
-                        {files.map((file, index) => (
-                          
-                          <li key={index} style={{ marginBottom: '1em', textAlign: 'center' }}>
-                            {file.name}
-                          </li>
-                        ))}
-                      </ul>
-                    </Box>
-                    )}
-                  </Box>
-            </Grid>
+            <Box
+              display='flex'
+              flexDirection='row'
+              alignItems='flex-start'
+              justifyContent='center'
+              padding={6}
+              paddingTop={1}
+            >
+              {files.length > 0 &&(
+              <Box flex='1' color={'white'} >
+                Uploaded images:
+                  <ul style={{ listStyleType: 'none', padding: 0, columns: `${Math.min(3, files.length)}` }}>
+                  {files.map((file, index) => (
+                    
+                    <li key={index} style={{ marginBottom: '1em', textAlign: 'center' }}>
+                      {file.name}
+                    </li>
+                  ))}
+                </ul>
+              </Box>
+              )}
+            </Box>
+          </Grid>
         </Grid>
-        
     );
   };
   
@@ -175,44 +152,3 @@ const UploadFromDevice = ({ closeModal, sendDataToMainPage }) => {
     };
 
   export default PopupWindow;
-
-  {/*<Box>
-        <Box {...getRootProps()} style={{width: '100%', minHeight: '100px', border: '2px dashed #bdbdbd', borderRadius: '4px', display: 'flex',
-                                          flexDirection: 'column', alignItems: 'center', justifyContent: 'center', padding: '20px', cursor: 'pointer', marginTop: '3em'}}>
-          <input {...getInputProps()} />
-            <p>Drag 'n' drop some files here, or click to select files</p>
-        </Box>
-        <LinearProgress variant="determinate" value={50} />
-        <TextField label="Type a phrase" variant="outlined" fullWidth />
-        <Button variant="contained" color="primary" style={{ marginTop: '10px' }}>
-          Search
-        </Button>
-      </Box>
-      
-      
-      Box>
-      <ImageDropzone onDrop={handleDrop} />
-      {loading && <LinearProgress variant="indeterminate" />}
-      {uploadedFiles.length > 0 && (
-        <Box>
-          <Typography variant="subtitle1" color="textSecondary" mt={2}>
-            Files Uploaded:
-          </Typography>
-          <ul>
-            {uploadedFiles.map((file) => (
-              <li key={file.name}>{file.name}</li>
-            ))}
-          </ul>
-        </Box>
-      )}
-      <TextField label="Type a phrase" variant="outlined" fullWidth />
-      <Button
-        variant="contained"
-        color="primary"
-        style={{ marginTop: '10px' }}
-        onClick={handleSearch}
-      >
-        Search
-      </Button>
-    </Box>
-      */}
