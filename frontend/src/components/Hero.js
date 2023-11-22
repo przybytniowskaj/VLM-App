@@ -49,11 +49,15 @@ const Hero = () => {
                 align='center'
                 color={theme.palette.text.secondary}
                 variant='h4'
+                padding={8}
                 paddingTop={3}
                 paddingBottom={3}
                 marginBottom='15px'
               >
-                Tu bym dala opis czym sa VLMs
+                Discover the future of text-image interaction with our app, driven by cutting-edge Vision-Language Models (VLMs). 
+                VLMs combine computer vision and natural language processing, enhancing image recognition and understanding. <br />
+                Experience the surge in popularity as VLMs redefine image processing, making searches more contextually accurate and captions effortlessly insightful. 
+                
               </Typography>
             </Box>
           </Box>
@@ -68,7 +72,7 @@ const Hero = () => {
           sx={{ order: { xs: 1, md: 1 } }}>
       <Box
         data-aos='fade-up'
-        padding={30}
+        padding={22}
       >
           <Button onClick={goToBottom}
             component='a'

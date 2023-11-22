@@ -49,11 +49,11 @@ const Description = () => {
                     justifyContent: 'center',
                   }}
                 >
-                <Typography variant='h6' gutterBottom fontWeight={700} padding={5}>
+                <Typography variant='h4' gutterBottom fontWeight={700} padding={5}>
                 Semantic Image Search
                 </Typography>
-                <Typography color={theme.palette.text.secondary}>
-                Description...
+                <Typography variant='h6' color={theme.palette.text.secondary}>
+                Discover images based on content with this feature, offering a seamless way to search through your uploaded images.
                 </Typography>
               </Button>
             </Box>
@@ -77,11 +77,11 @@ const Description = () => {
                     justifyContent: 'center',
                   }}
                 >
-                <Typography variant='h6' gutterBottom fontWeight={700} padding={5}>
+                <Typography variant='h4' gutterBottom fontWeight={700} padding={5}>
                 Image Captioning
                 </Typography>
-                <Typography color={theme.palette.text.secondary}>
-                Description...
+                <Typography variant='h6' color={theme.palette.text.secondary}>
+                Effortlessly enhance your images with meaningful captions using this feature.
                 </Typography>
               </Button>
             </Box>
