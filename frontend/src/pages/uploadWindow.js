@@ -52,7 +52,7 @@ const UploadFromDevice = ({ closeModal, sendDataToMainPage }) => {
   
     const sendData = async () => {
       setIsLoading(true);
-  
+      console.log(files);
       const formData = new FormData();
       for (let i = 0; i < files.length; i++) {
         formData.append('images', files[i], files[i].name);

@@ -1,23 +1,13 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import Head from 'next/head';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import Container from '@mui/material/Container';
 import Grid from '@mui/material/Grid';
 import LinearProgress from '@mui/material/LinearProgress';
 import { useTheme } from '@mui/material';
 
 import GenerateCaption from '../components/GenerateCaption';
-import ImageDropzone from '../components/ImageDropzone';
-import ClassifierButtons from '../components/ClassifierButtons';
-import ClassifierHeader from '../components/ClassifierHeader';
-import ClassifierResult from '../components/ClassifierResult';
 import Header from '../layout/Header';
-import ClassifyAgain from '../components/ClassifyAgain';
-import Spacer from '../components/Spacer';
 import replaceUnderscore from '../utils/replaceUnderscore';
 import capitalizeFirstLetter from '../utils/capitalizeFirstLetter';
 import Typography from '@mui/material/Typography';
@@ -135,46 +125,42 @@ const Classifier = () => {
       <Header title='Image Captioning' />
       <Box
         backgroundColor={theme.palette.background.default}
-        minHeight='100%'
         paddingTop={15}
-        paddingBottom={15}
         flexDirection="column"
-
       > 
       <Grid container spacing={4} style={{ height: '80vh' }}>
-        <Grid item xs={12} md={4} style={{ height: '60%', marginTop: '8%'}}>
+        <Grid item xs={12} md={4} position="fixed" style={{ height: '60%', width: '100%', marginTop: '5%'}}>
             <Box
               display="flex"
               flexDirection="column"
               justifyContent="center"
-              height="100%"
+              height="80%"
             >
-              <Button variant="contained" color="primary" onClick={() => openModal(0)} style={{ width: '80%', height: '40%', margin: '20px auto', flexGrow: 1 }}>
+              <Button variant="contained" color="primary" onClick={() => openModal(0)} style={{ width: '80%', height: '40%', margin: '2% auto', flexGrow: 1 }}>
                 <Typography variant='h6'>Upload photos from device</Typography>
               </Button>
-              <Button variant="contained" color="primary" onClick={() => openModal(1)} style={{ width: '80%', height: '40%', margin: '20px auto', flexGrow: 1 }}>
+              <Button variant="contained" color="primary" onClick={() => openModal(1)} style={{ width: '80%', height: '40%', margin: '2% auto', flexGrow: 1 }}>
                 <Typography variant='h6'>Choose photos from catalog</Typography>
               </Button>
             </Box>
           </Grid>
         
           
-        <Grid item container xs={12} md={8} >
+        <Grid item container xs={12} md={8} marginLeft={"35%"} position="fixed">
         
-          <Grid container alignItems={'center'} style={{ height: '90%', width: '90%'}} >
+          <Grid container alignItems={'center'} style={{ height: '100%', width: '95%'}} >
             <Grid
               item
               container
               alignItems='center'
               justifyContent='space-between'
-              marginTop='-30px'
               spacing={3}
               xs={12}
             >
               
-              <Grid item xs={12}>
+              <Grid item xs={12} marginTop={2}>
                 {isLoading && (
-                  <Box marginBottom={3} marginTop={2} style={{ width: '100%' }}>
+                  <Box  style={{ width: '100%' }}>
                     <LinearProgress color='success' />
                   </Box>
                 )}
@@ -182,70 +168,23 @@ const Classifier = () => {
             </Grid>
             
 
-            {/* { (
-              <Grid item xs={12}>
-                    <Box
-                      display='flex'
-                      flexDirection='row'
-                      alignItems='flex-start'
-                      justifyContent='center'
-                      flex="1"    
-                      height="300px"
-                      marginLeft={2}
-                      bgcolor="white"
-                    >
-                      {files.length > 0 && (
-                  <Box flex="1" height="300px" marginLeft={2}>
-                    <img
-                      src={URL.createObjectURL(files[0])}
-                      alt={files[0].name}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'contain',
-                      }}
-                    />
-                  </Box>
-                )}
-                    </Box>
-                
-              </Grid>
-            )} */}
             <Box
               flex="1"
-              height="500px"
-              marginLeft={2}
               display="flex"
               flexDirection="column"
               alignItems="center"
               justifyContent="space-between"
-              border={5}  
-              borderColor="white"  
               padding={2}
             >
               
             {image ? (
-              
               <>
-                
-                    <Box 
-              alignItems='center'
-              justifyContent='space-between'
-              position='relative'
-              width="500px"
-              height="350px"
-              bgcolor={'white'}
-              marginBottom={2}
-              padding={2}>
-                    {/* <img
-                      src={image.data.image}
-                      alt={files[0]?.name || "Uploaded Image"}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'contain',
-                      }}
-                    /> */}
+              <Box 
+            alignItems='center'
+            justifyContent='space-between'
+            position='relative'
+            height="50vh"
+            padding={2}>
                     <img
                 src={files2.length > 0 ? URL.createObjectURL(files2[0]) : ""}
                 alt={files2[0]?.name || "Uploaded Image"}
@@ -261,10 +200,10 @@ const Classifier = () => {
                     <GenerateCaption classificationResult={capitalizeFirstLetter(
                     replaceUnderscore(image.data.result)
                   )}/>
-                    </Box>
-                  
-              </>
-            ): (
+                   </Box>
+            </> 
+            )
+            : (
               
               <>
               <Box>
@@ -272,10 +211,9 @@ const Classifier = () => {
               alignItems='center'
               justifyContent='space-between'
               position='relative'
-              width="500px"
-              height="350px"
-              bgcolor={'white'}
-              marginBottom={2} 
+              fullWidth
+              height="50vh"
+              bgcolor={theme.palette.background.paper}
               padding={2}>
               {files.length > 0 && (
               <img
@@ -301,7 +239,7 @@ const Classifier = () => {
             <Box
                position='fixed'
                top='80%'
-               left='50%'
+               left='60%'
              >
               <Button
                 variant='contained'
@@ -310,18 +248,16 @@ const Classifier = () => {
                 disableElevation={true}
                 onClick={sendData}
                 sx={{
-                  padding: '14px 30px',
-                  fontSize: '18px',
-                  border: '1px solid transparent',
+                  padding: '1em 1.5em',
+                  fontSize: '1.3em',
                   '&:hover': {
-                    backgroundColor: 'transparent',
-                    color: theme.palette.primary.main,
-                    border: `2px solid ${theme.palette.primary.main}`,
+                    border: `1px solid white`,
                   },
                 }}
               >
                 Generate Caption
               </Button>
+              
       </Box>
     
             

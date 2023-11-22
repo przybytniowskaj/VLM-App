@@ -34,6 +34,7 @@ const Classifier = () => {
   const [result, setResult] = useState(null);
   const [images, setImages] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [secondSearch, setSecondSearch] = useState(false);
   const defaultPhotos = [`https://images.unsplash.com/photo-1504598318550-17eba1008a68?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDJ8fHRyYXZlbHxlbnwwfHwwfHx8MA%3D%3D`,
   `https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8dHJhdmVsfGVufDB8fDB8fHww`,
                            `https://plus.unsplash.com/premium_photo-1677343210638-5d3ce6ddbf85?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dHJhdmVsfGVufDB8fDB8fHww`,
@@ -44,6 +45,7 @@ const Classifier = () => {
 
   const openModal = (tab) => {
     setInitialTab(tab);
+    setTextInputValue("");
     setModalOpen(true);
   };
 
@@ -56,6 +58,7 @@ const Classifier = () => {
   };
 
   const sendDataToMainPage = (data) => {
+    setSecondSearch(true);
     axios.get(`http://127.0.0.1:8000/api/semanticimagesearch/get_semantic_image_search`, {
         headers: {
           accept: 'application/json',
@@ -70,16 +73,32 @@ const Classifier = () => {
 
   const handleEnterKeyPress = (event) => {
     if (event.key === 'Enter') {
+      setIsLoading(true);
       sendData();
     }
   };
 
+  useEffect(() => {
+  // The value here will be the updated value of isLoading
+    console.log(isLoading);
+  }, [isLoading]);  
+
   const sendData = async () => {
-    setIsLoading(true);
 
     const formData = new FormData();
-    for (let i = 0; i < images.length; i++) {
-      formData.append('images', images[i], images[i].name);
+    if (secondSearch) {
+      for (let i = 0; i < images.length; i++) {
+        const imageFileName = images[i].image;
+        const response = await fetch(`http://127.0.0.1:8000/${imageFileName}`);
+        const imageBlob = await response.blob();
+        const imageFile = new File([imageBlob], imageFileName, { type: 'image/*' });
+        formData.append('images', imageFile);
+      }
+    }
+    else {
+      for (let i = 0; i < images.length; i++) {
+        formData.append('images', images[i].image);
+      }
     }
     formData.append('query', textInputValue);
 
@@ -89,8 +108,7 @@ const Classifier = () => {
         data: formData
     }).then(function (response) {
       setIsLoading(false);
-      sendDataToMainPage(response.data);
-      closeModal();
+      sendDataToMainPage(response);
     }).catch(function (error) {
         console.log(error);
         setIsLoading(false);
@@ -103,30 +121,35 @@ const Classifier = () => {
     <Header title='Semantic Image Search' />
     <Box
         backgroundColor={theme.palette.background.default}
-        paddingTop={10}
+        marginTop={10}
       >
       <Grid container spacing={4} style={{ height: '80vh' }}>
-      <Grid item xs={12} md={4} style={{ height: '60%', marginTop: '8%', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+      
+      <Grid item xs={12} md={4} position='fixed' style={{ width:'100%', height: '60%', marginTop: '4%', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
       <TextField
-      label="Type key word for photos and press enter"
-      variant="outlined"
-      style={{ width: '80%', marginBottom: '20px' }}
-      value={textInputValue}
-      onChange={handleTextChange}
-      onKeyDown={handleEnterKeyPress}
-    />
-    <Grid item xs={4}>
-            {isLoading && (<LinearProgress color='success' data-aos='zoom-out'/> )}
-          </Grid>
-              <Button variant="contained" color="primary" onClick={() => openModal(0)} style={{ width: '80%', height: '40%', margin: '20px auto', flexGrow: 1 }}>
+        label="Type phrase and press enter"
+        variant="outlined"
+        style={{ width: '80%', marginBottom: '20px', color:'white' }}
+        value={textInputValue}
+        onChange={handleTextChange}
+        onKeyDown={handleEnterKeyPress}
+        marginBottom={2}
+      />
+      
+    
+              <Button variant="contained" disableElevation={true} color="primary" onClick={() => openModal(0)} style={{ width: '80%', height: '40%', margin: '4% auto', flexGrow: 1 }}>
                 <Typography variant='h6'>Upload photos from device</Typography>
               </Button>
-              <Button variant="contained" color="primary" onClick={() => openModal(1)} style={{ width: '80%', height: '40%', margin: '20px auto', flexGrow: 1 }}>
+              <Button variant="contained" color="primary" onClick={() => openModal(1)} style={{ width: '80%', height: '40%', margin: '4% auto', flexGrow: 1 }}>
                 <Typography variant='h6'>Choose photos from catalog</Typography>
               </Button>
           </Grid>
-        <Grid item container xs={12} md={8} >
-        <Grid container spacing={1} style={{ height: '80vh',width:'90%', marginTop:'1vh', alignItems: 'center', justifyContent: 'center' }}>
+        <Grid item container xs={12} md={8} style={{ marginLeft:'35%' }}>
+        
+              <Box  style={{ width: '85%', marginBottom: '1%'}}>
+                {isLoading && (<LinearProgress color='success' />)}
+              </Box>
+        <Grid container spacing={1} style={{ height: '90vh',width:'90%', alignItems: 'center', justifyContent: 'center' }}>
         {!result && (defaultPhotos.map((photo, index) => (    
         
            <Grid item key={index} sm={6} md={4} lg={4} alignItems={'center'} align-content='flex-start' style={{ marginBottom: '2px' }}>
@@ -134,7 +157,7 @@ const Classifier = () => {
             <img
               src={photo}
               alt={`Image ${index + 1}`}
-              style={{ width: '70%', height: '70%', objectFit: 'cover' }}
+              style={{ width: '75%', height: '75%', objectFit: 'cover' }}
             />
           </a>
         </Grid>
@@ -146,21 +169,18 @@ const Classifier = () => {
                   <img
                     src={`http://127.0.0.1:8000/${images[index].image}`}
                     alt={`Image ${index + 1}`}
-                    style={{ width: '90%', height: '90%', objectFit: 'cover' }}
+                    style={{ width: '85%', height: '85%', objectFit: 'cover' }}
                   />
                 </a>
               </Grid>
+              
             ))
           )}
         </Grid>
         </Grid>
-        
-        
       </Grid>
-      
       </Box>
-      <Spacer sx={{ pt: 6 }} />
-
+      
       <CustomModal isOpen={isModalOpen} onRequestClose={closeModal} initialTab={initialTab}  sendDataToMainPage={sendDataToMainPage}/>
       </>
   );

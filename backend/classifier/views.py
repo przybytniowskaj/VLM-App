@@ -40,11 +40,12 @@ class SearchViewSet(viewsets.ModelViewSet):
         # print(images_list)
         # print('nie umiem')
         result = perform_semantic_search(query, images)  
-        print("siema")
         print(result)
-        result_str = ', '.join(result)
-        print(result_str)
-        semantic_search.result = result_str
+        # print("siema")
+        # print(result)
+        # result_str = ', '.join(result)
+        # print(result_str)
+        semantic_search.result = result
         semantic_search.save()
         # print(result)
         # result2 = [semantic_search.images[i] for i in result]

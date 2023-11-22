@@ -14,14 +14,15 @@ const GenerateCaption = ({ classificationResult
   }, []);
 
   return (
-    <Box width="500px" alignItems={'center'} bgcolor="white" padding={2} >
+    <Box width="500px" alignItems={'center'} padding={2} >
       <TextField
         variant="outlined"
         fullWidth
         value={generatedText}
         readOnly
+        disabled
         InputProps={{
-          style: { color: 'black', fontWeight: 'bold' },
+          style: { color: 'white', fontWeight: 'bold' },
         }}
       />
     </Box>

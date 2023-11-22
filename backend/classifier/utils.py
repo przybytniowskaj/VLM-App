@@ -5,7 +5,7 @@ from PIL import Image
 
 def perform_semantic_search(query, images):
     device = "cuda" if torch.cuda.is_available() else "cpu"
-    model, preprocess = clip.load("ViT-B/16", device=device)
+    model, preprocess = clip.load("ViT-B/32", device=device)
 
     image_features = []
     image_paths = []
@@ -15,20 +15,25 @@ def perform_semantic_search(query, images):
         
         image_preprocessed = preprocess(Image.open(image)).unsqueeze(0).to(device)
         image_features.append(model.encode_image(image_preprocessed))
-
+    
     text_preprocessed = clip.tokenize([query]).to(device)
     text_features = model.encode_text(text_preprocessed)
-    
+
     similarities = []
     for image_feature in image_features:
         similarity = torch.nn.functional.cosine_similarity(text_features, image_feature, dim=1)
         similarities.append(similarity.item())
 
-    threshold = 0.1
-    filtered_similarities = [index for index, sim in enumerate(similarities) if sim > threshold]
-    print(similarities)
-    # Rank images based on similarity
-    ranked_images = [f"{index}" for index, _ in sorted(enumerate(filtered_similarities), key=lambda x: x[1], reverse=True)]
+    # filtered_similarities = [index for index, sim in enumerate(similarities) if sim > threshold]
+    # print(similarities)
+    # # Rank images based on similarity
+    # ranked_images = [f"{index}" for index, _ in sorted(enumerate(filtered_similarities), key=lambda x: x[1], reverse=True)]
     # Update the result field
     # result = ', '.join([f"Image {index + 1}" for index, _ in ranked_images])
-    return ranked_images
+    threshold = 0.15
+    filtered_similarities = [index for index, sim in enumerate(similarities) if sim > threshold]
+    ranked_images = sorted(filtered_similarities, key=lambda x: similarities[x], reverse=True)
+
+    result = ', '.join([f"{index}" for index in ranked_images])
+    print(result)
+    return result

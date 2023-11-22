@@ -110,7 +110,6 @@ const Hero = () => {
           alignItems='center'
           justifyContent='center'
           xs={30}
-          md={'100%'}
           sx={{ order: { xs: 1, md: 1 } }}>
       <Box
         data-aos='fade-up'
