@@ -10,6 +10,7 @@ import Typography from '@mui/material/Typography';
 import { useTheme } from '@mui/material';
 import MenuIcon from '@mui/icons-material/Menu';
 import HomeOutlinedIcon from '@mui/icons-material/HomeOutlined';
+import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
 import CameraAltIcon from '@mui/icons-material/CameraAlt';
 import InsertPhotoOutlinedIcon from '@mui/icons-material/InsertPhotoOutlined';
 
@@ -44,6 +45,42 @@ const Header = ({ onSidebarOpen, title, color_back}) => {
           >
             <HomeOutlinedIcon /> Home
           </Button>
+          <Button
+            component='a'
+            color='primary'
+            href='/login'
+            size='small'
+            variant='text'
+            sx={{
+              color: theme.palette.common.white,
+              fontSize: theme.typography.subtitle1,
+              fontWeight: 'medium',
+              mr: 2,
+              '& svg': {
+                mr: 0.5,
+              },
+            }}
+          >
+            <LockOutlinedIcon /> Login
+          </Button>
+          {/* <Button
+            component='a'
+            color='primary'
+            href='/signup'
+            size='small'
+            variant='text'
+            sx={{
+              color: theme.palette.common.white,
+              fontSize: theme.typography.subtitle1,
+              fontWeight: 'medium',
+              mr: 2,
+              '& svg': {
+                mr: 0.5,
+              },
+            }}
+          >
+            <LockOutlinedIcon /> Sign Up
+          </Button> */}
           <Box sx={{ flexGrow: 1 }} />
           <Typography variant='h4'>
             {title}
