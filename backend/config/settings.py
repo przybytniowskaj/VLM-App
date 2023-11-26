@@ -16,13 +16,11 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-SITE_ID = 1
-
 
 # Application definition
 
 INSTALLED_APPS = [
-   'django.contrib.admin',
+    'django.contrib.admin',
   'django.contrib.auth',
   'django.contrib.contenttypes',
   'django.contrib.sessions',
@@ -33,16 +31,11 @@ INSTALLED_APPS = [
   # 3rd party
   'rest_framework',
   'corsheaders',
-  'rest_framework.authtoken', #define authentication we want to use
 
   # Local
-  'classifier',
-  'users'
+  'classifier'
   
 ]
-
-AUTH_USER_MODEL = "users.User"
-
 
 MIDDLEWARE = [
   'corsheaders.middleware.CorsMiddleware',
@@ -56,15 +49,6 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = 'config.urls'
-
-REST_FRAMEWORK = {
-    "NON_FIELD_ERRORS_KEY": "errors",
-    "DEFAULT_AUTHENTICATION_CLASSES": (
-        "rest_framework.authentication.SessionAuthentication",
-        "rest_framework.authentication.TokenAuthentication",
-    ),
-    "DEFAULT_PERMISSION_CLASSES": ("rest_framework.permissions.IsAuthenticated",),
-}
 
 TEMPLATES = [
   {
