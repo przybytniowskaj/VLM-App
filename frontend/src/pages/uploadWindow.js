@@ -52,8 +52,8 @@ const UploadFromDevice = ({ closeModal, sendDataToMainPage }) => {
     };
 
     return ( 
-        <Grid container spacing={3}>
-          <Grid item xs={12} padding={6}>
+        <Grid container>
+          <Grid item xs={12} padding={4}>
             {isLoading && (<LinearProgress color='success' data-aos='zoom-out'/> )}
           </Grid>
           <Grid item xs={12}>
