@@ -12,6 +12,7 @@ const Classifier = () => {
   const [initialTab, setInitialTab] = useState(0); 
   const [result, setResult] = useState(null);
   const [images, setImages] = useState(null);
+  const [features, setFeatures] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [secondSearch, setSecondSearch] = useState(false);
   const defaultPhotos = [ `https://images.unsplash.com/photo-1504598318550-17eba1008a68?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDJ8fHRyYXZlbHxlbnwwfHwwfHx8MA%3D%3D`,
@@ -50,6 +51,7 @@ const Classifier = () => {
         setTextInputValue(response.data.query);
         setResult(response.data.result.split(',').map((item) => parseInt(item.trim(), 10)));
         setImages(response.data.images);
+        setFeatures(response.data.image_features);
       })
       .catch((err) => console.log(err));
   };
@@ -77,7 +79,9 @@ const Classifier = () => {
         formData.append('images', images[i].image);
       }
     }
+    formData.append('image_features', JSON.stringify(features));
     formData.append('query', textInputValue);
+
 
     axios({
           method: 'post',
@@ -86,6 +90,7 @@ const Classifier = () => {
       }).then(function (response) {
         setIsLoading(false);
         sendDataToMainPage(response);
+
       }).catch(function (error) {
           console.log(error);
           setIsLoading(false);
