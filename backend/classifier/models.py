@@ -49,6 +49,7 @@ class SemanticImageSearch(models.Model):
     result = models.CharField(max_length=250, blank=True)
     date_uploaded = models.DateTimeField(auto_now_add=True)
     images = models.ManyToManyField(Image)
+    image_features = models.JSONField(blank=True, null=True)
 
     def __str__(self):
-      return 'Semantic search for "{}" uploaded at {}'.format(self.query, self.date_uploaded.strftime('%Y-%m-%d %H:%M'))
+      return 'Semantic search for "{}" - {}'.format(self.query, self.date_uploaded.strftime('%Y-%m-%d %H:%M'))
