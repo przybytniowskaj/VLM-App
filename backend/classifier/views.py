@@ -1,22 +1,18 @@
-from rest_framework import viewsets
+from rest_framework import viewsets,status
+from rest_framework.decorators import action
+from rest_framework.response import Response
+from PIL import Image as PILImage
+from django.http import JsonResponse
+import json
 
-from .serializers import ClassifierSerializer, SemanticImageSearchSerializer
-from .models import Classifier, SemanticImageSearch
+from .serializers import ClassifierSerializer, SemanticImageSearchSerializer, UserCaptionChoicesSerializer
+from .models import Classifier, SemanticImageSearch, UserCaptionChoices
+from .utils import perform_semantic_search, device, model, preprocess
 
 
 class ClassifierViewSet(viewsets.ModelViewSet):
   queryset = Classifier.objects.all().order_by('-date_uploaded')
   serializer_class = ClassifierSerializer
-
-from rest_framework import viewsets, status
-from rest_framework.decorators import action
-from rest_framework.response import Response
-from .utils import perform_semantic_search, device, model, preprocess
-from .models import SemanticImageSearch, Image
-from .serializers import SemanticImageSearchSerializer, ImageSerializer
-from PIL import Image as PILImage
-from django.http import JsonResponse
-import json
 
 class SearchViewSet(viewsets.ModelViewSet):
     queryset = SemanticImageSearch.objects.all().order_by('-date_uploaded')
@@ -32,14 +28,11 @@ class SearchViewSet(viewsets.ModelViewSet):
         feature = request.data.get('image_features');
         result, features = perform_semantic_search(query, images, feature)  
         features = [feature.tolist() for feature in features]
-        print(features)
         semantic_search = SemanticImageSearch.objects.create(query=query, image_features=features, result=result)
-        print("po semantic")
         images_list = []
         for image_file in images:
             semantic_search.images.create(image=image_file)
             images_list.append(image_file)
-        print("po petli")
         semantic_search.save()
 
         return Response({'message': 'Semantic search successful.'})
@@ -57,3 +50,7 @@ class SearchViewSet(viewsets.ModelViewSet):
             return JsonResponse(serializer.data)
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
+
+class UserCaptionChoicesViewSet(viewsets.ModelViewSet):
+    queryset = UserCaptionChoices.objects.all()
+    serializer_class = UserCaptionChoicesSerializer

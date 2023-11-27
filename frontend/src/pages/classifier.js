@@ -151,9 +151,28 @@ const Classifier = () => {
       alert('Please select at least one title or provide your own');
       return;
     }
-    const selectedTitles = selectedIndexes.map((index) => generatedText[index]);
-    // saveToCSV(imagePath, selectedTitles);
-  };
+
+    const feedbackData = [];
+    selectedIndexes.forEach(index => {
+        feedbackData.push({
+            image_path: files[0].path,  
+            caption: generatedText[index],
+        });
+    });
+    if (userSuggestion !== '') {
+      feedbackData.push({
+          image_path: files[0].path,
+          caption: userSuggestion,
+      });
+    }
+    feedbackData.forEach(data => {
+      axios.post('http://127.0.0.1:8000/api/user-caption-choices/', data)
+          .then(console.log("Feedback submitted with success"))
+          .catch(error => {
+              console.error('Error submitting feedback:', error);
+          });
+  });
+};
   
   return (
     <>

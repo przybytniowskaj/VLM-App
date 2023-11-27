@@ -2,21 +2,30 @@
 import numpy as np
 import tensorflow as tf
 from django.db import models
+from django.core.files.storage import FileSystemStorage
 
 from transformers import BlipProcessor, BlipForConditionalGeneration
 
 import config.settings as settings
-from PIL import Image
 import PIL.Image
 from .utils import perform_semantic_search
-from rest_framework.response import Response
-import ssl
+import ssl, os
+
+def get_image_path(instance, filename):
+    # Construct the file path
+    return os.path.join('images', filename)
 
 processorBlip = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
 modelBlip = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
 
+class OverwriteStorage(FileSystemStorage):
+
+    def get_available_name(self, name, max_length=None):
+        self.delete(name)
+        return name
+
 class Classifier(models.Model):
-  image = models.ImageField(upload_to='images')
+  image = models.ImageField(upload_to='images', storage=OverwriteStorage())
   result = models.TextField(blank=True, null=True)
   date_uploaded = models.DateTimeField(auto_now_add=True)
 
@@ -41,7 +50,7 @@ class Classifier(models.Model):
     return super().save(*args, **kwargs)
 
 class Image(models.Model):
-    image = models.ImageField(upload_to='images')
+    image = models.ImageField(upload_to='images', storage=OverwriteStorage())
 
     def __str__(self):
         return self.image.url
@@ -55,3 +64,10 @@ class SemanticImageSearch(models.Model):
 
     def __str__(self):
       return 'Semantic search for "{}" - {}'.format(self.query, self.date_uploaded.strftime('%Y-%m-%d %H:%M'))
+
+class UserCaptionChoices(models.Model):
+    image_path = models.CharField(max_length=255)
+    caption = models.TextField()
+
+    def __str__(self):
+        return f"Caption for {self.image_path}"
