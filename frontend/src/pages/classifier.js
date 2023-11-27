@@ -184,17 +184,17 @@ const Classifier = () => {
       > 
       <Grid container spacing={4} style={{ height: '85vh' }}>
 
-        <Grid item xs={12} md={4} position="fixed" style={{ height: '60%', width: '100%', marginTop: '5%'}}>
+        <Grid item xs={12} md={4} position="fixed" style={{ height: '80%', width: '100%', marginTop:"-0.5%"}}>
             <Box
               display="flex"
               flexDirection="column"
               justifyContent="center"
               height="80%"
             >
-              <Button variant="contained" color="primary" onClick={() => openModal(0)} style={{ width: '80%', height: '40%', margin: '2% auto', flexGrow: 1 }}>
+              <Button variant="contained" color="primary" onClick={() => openModal(0)} style={{ width: '80%', height: '30%', margin: '6% auto', flexGrow: 1 }}>
                 <Typography variant='h6'>Upload photos from device</Typography>
               </Button>
-              <Button variant="contained" color="primary" onClick={() => openModal(1)} style={{ width: '80%', height: '40%', margin: '2% auto', flexGrow: 1 }}>
+              <Button variant="contained" color="primary" onClick={() => openModal(1)} style={{ width: '80%', height: '30%', margin: '6% auto', flexGrow: 1 }}>
                 <Typography variant='h6'>Choose photos from catalog</Typography>
               </Button>
             </Box>
