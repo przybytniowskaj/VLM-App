@@ -12,34 +12,17 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
     const theme = useTheme();
     const [files, setFiles] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
-    const [image, setImage] = useState(null);
-    const [imageUrls, setImageUrls] = useState([]);
     const [textInputValue, setTextInputValue] = useState('');
 
-    
-    const handleTextChange = (event) => {
-      setTextInputValue(event.target.value);
-    };
 
     const handleDrop = (files) => {
+      setIsLoading(true);
       setFiles(files);
-      setImage(null);
       setIsLoading(false);
-      loadImage(files);
       onDrop(files);
     };
 
-    
-
-    const loadImage = (files) => {
-      setIsLoading(true);
-      setTimeout(() => {
-        setIsLoading(false);
-      }, 3000);
-    };
   
-    
-    
     return ( 
         <Grid container spacing={3}>
           <Grid
@@ -63,8 +46,7 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
                     flexDirection='row'
                     alignItems='center'
                     justifyContent='center'
-                    padding={6}
-                    paddingTop={1}
+                    padding={2}
                   >
                     {files.length > 0 && !isLoading &&(
                       <Box flex='1' color={'white'} >
@@ -73,7 +55,7 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
                     </Typography>
 
                       <Box flexDirection = 'row'>
-                      <Box flex="1" height="300px" marginLeft={2} style={{ border: '10px solid white' }}>
+                      <Box flex="1" height="20em" marginLeft={2} style={{ border: '10px solid white' }}>
                         <img
                         src={URL.createObjectURL(files[0])}
                         alt={files[0].name}
@@ -91,7 +73,7 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
                         <ul style={{ listStyleType: 'none', padding: 0, columns: `${Math.min(3, files.length)}` }}>
                         {files.map((file, index) => (
                           
-                          <li key={index} style={{ marginBottom: '1em', textAlign: 'center' }}>
+                          <li key={index} style={{ textAlign: 'center' }}>
                             {file.name}
                           </li>
                         ))}
@@ -189,7 +171,7 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
                 <Tab label="Upload from Catalog" icon={<PhotoLibraryIcon />} />
             </Tabs>
             <CloseIcon style={{ cursor: 'pointer', position: 'absolute', top: '20px', right: '20px' }} onClick={onRequestClose}/>          
-            {activeTab === 0 && <UploadFromDevice onDrop={onDrop} closeModal = {onRequestClose}/>}
+            {activeTab === 0 && <UploadFromDevice onDrop={onDrop} closeModal ={onRequestClose}/>}
             {activeTab === 1 && <UploadFromCatalog />}
         </Modal>
       );

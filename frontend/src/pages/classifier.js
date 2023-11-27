@@ -1,13 +1,49 @@
 import React, { useState } from 'react';
+import { saveAs } from 'file-saver';
 import axios from 'axios';
 import { useTheme } from '@mui/material';
 import { Box, TextField, Button, Grid, LinearProgress, Typography } from '@mui/material';
 
+
 import Header from '../layout/Header';
-import replaceUnderscore from '../utils/replaceUnderscore';
 import capitalizeFirstLetter from '../utils/capitalizeFirstLetter';
 import UploadWindowCaptioning from './uploadWindowCaptioning';
 
+const CopyButton = ({ text, onSelect, onDeselect, selected }) => {
+  const theme = useTheme();
+  const [isCopied, setIsCopied] = useState(false);
+
+  const handleCopyClick = () => {
+    navigator.clipboard.writeText(text);
+    setIsCopied(true);
+    onSelect(); // Notify parent component that this button is selected
+    alert(`Text "${text}" is copied to the clipboard!`);
+  };
+
+  const handleDeselect = () => {
+    setIsCopied(false);
+    onDeselect(); // Notify parent component that this button is deselected
+  };
+
+  return (
+    <Button
+      variant="outlined"
+      fullWidth
+      backgroundColor={theme.palette.background.paper}
+      style={{
+        textAlign: 'center',
+        color: 'white',
+        userSelect: 'all',
+        border: isCopied ? '1.5px solid white' : '1px solid darkgrey',
+        textTransform: 'none', 
+        padding:"3%"
+      }}
+      onClick={isCopied ? handleDeselect : handleCopyClick}
+    >
+      {text}
+    </Button>
+  );
+};
 
 const Classifier = () => {
   const theme = useTheme();
@@ -16,11 +52,42 @@ const Classifier = () => {
   const [caption, setCaption] = useState(null);
   const [initialTab, setInitialTab] = useState(0);
   const [isModalOpen, setModalOpen] = useState(false); 
-  const [generatedText, setGeneratedText] = useState("");
+  const [generatedText, setGeneratedText] = useState([]);
+  const [selectedIndexes, setSelectedIndexes] = useState([]);
+  const [userSuggestion, setUserSuggestion] = useState('');
+
+  const handleUserSuggestionChange = (event) => {
+    setUserSuggestion(event.target.value);
+  };
+
+  const handleSelect = (index) => {
+    setSelectedIndexes((prevSelected) => [...prevSelected, index]);
+  };
+
+  const handleDeselect = (index) => {
+    setSelectedIndexes((prevSelected) =>
+      prevSelected.filter((selectedIndex) => selectedIndex !== index)
+    );
+  };
+
+  const handleSave = () => {
+    if (selectedIndexes.length === 1 && userSuggestion === '') {
+      saveAs(files[0], generatedText[selectedIndexes[0]].replace(/\s+/g, '_'));
+    } else if (selectedIndexes.length === 0 && userSuggestion !== '') {
+      saveAs(files[0], userSuggestion);
+    } else if (selectedIndexes.length === 0 && userSuggestion === '') {
+      saveAs(files[0], generatedText[0].replace(/\s+/g, '_'));
+    } else {
+      alert('Please select only one title or your suggestion.');
+    }
+  }
 
   const loadImage = (files) => {
     setTimeout(() => {
       setFiles(files);
+      setCaption('');
+      setSelectedIndexes([]);
+      setUserSuggestion("");
       if (setFiles.length) {
         setIsLoading(false);
       }
@@ -61,7 +128,8 @@ const Classifier = () => {
       })
       .then((response) => {
         setCaption(response);
-        setGeneratedText(capitalizeFirstLetter(replaceUnderscore(response.data.result)));
+        setGeneratedText(response.data.result.match(/'([^']+)'/g).map(str => str.slice(1, -1)));
+        setImagePath(response.data.image);
       })
       .catch((err) => console.log(err));
 
@@ -69,13 +137,22 @@ const Classifier = () => {
   };
 
   const openModal = (tab) => {
-    setGeneratedText("");
+    setGeneratedText([]);
     setInitialTab(tab);
     setModalOpen(true);
   };
 
   const closeModal = () => {
     setModalOpen(false);
+  };
+
+  const handleSaveToCSV = () => {
+    if (selectedIndexes.length === 0 && userSuggestion === '') {
+      alert('Please select at least one title or provide your own');
+      return;
+    }
+    const selectedTitles = selectedIndexes.map((index) => generatedText[index]);
+    // saveToCSV(imagePath, selectedTitles);
   };
   
   return (
@@ -86,7 +163,7 @@ const Classifier = () => {
         paddingTop={15}
         flexDirection="column"
       > 
-      <Grid container spacing={4} style={{ height: '80vh' }}>
+      <Grid container spacing={4} style={{ height: '85vh' }}>
 
         <Grid item xs={12} md={4} position="fixed" style={{ height: '60%', width: '100%', marginTop: '5%'}}>
             <Box
@@ -109,8 +186,6 @@ const Classifier = () => {
             <Grid
               item
               container
-              alignItems='center'
-              justifyContent='space-between'
               spacing={3}
               xs={12}
             >
@@ -122,24 +197,79 @@ const Classifier = () => {
                 )}
               </Grid>
             </Grid>
-          
-            <Box
-              flex="1"
+          {!caption ?(
+            <Box flex="1"
+            display="flex"
+            flexDirection="column"
+            alignItems="center"
+            padding={3}
+            >
+            <Box 
+                alignItems='center'
+                position='relative'
+                fullWidth
+                height="55vh"
+                bgcolor={theme.palette.background.paper}
+                padding={2}
+                marginBottom={3}>
+                {files.length > 0 && (
+                <img
+                  src={files.length > 0 ? URL.createObjectURL(files[0]) : ''}
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                  }}
+                /> 
+                )}
+                { files.length == 0 && (
+                  <img
+                    src={`https://images.unsplash.com/photo-1600354279787-0a726615ef44?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGRvZ3MlMjBpbiUyMGZvcmVzdHxlbnwwfHwwfHx8MA%3D%3D`}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: 'cover',
+                    }}
+                  />
+                )}
+              </Box>
+              <Button
+                variant='contained'
+                color='primary'
+                size='large'
+                disableElevation={true}
+                onClick={sendData}
+                sx={{
+                  padding: '1em 1.5em',
+                  fontSize: '1.1em',
+                  '&:hover': {
+                    border: `0.8px solid white`,
+                  },
+                }}
+              >
+                Generate Caption
+              </Button>
+            </Box>
+          )
+          :
+          (
+            <Grid container spacing={0} style={{ height: '100%' }} marginTop={-1}>
+            <Grid item container xs={8} md={3} position="fixed" style={{ height: '100%'}}>
+              <Box 
               display="flex"
               flexDirection="column"
-              alignItems="center"
-              justifyContent="space-between"
-              padding={2}
-              marginTop={-2}
-            >
-              {caption ? (
-                <>
-                <Box 
+              alignItems="center" 
+              padding={2}  
+              height="70vh"     
+              >
+              <Box 
                   alignItems='center'
                   justifyContent='space-between'
                   position='relative'
-                  height="55vh"
+                  height="90%"
+                  bgcolor={theme.palette.background.paper}
                   padding={2}
+                  marginBottom={3}
                 >
                   <img
                     src={URL.createObjectURL(files[0])}
@@ -149,60 +279,6 @@ const Classifier = () => {
                       objectFit: 'contain'}}
                   />
                 </Box>
-              </> 
-              )
-              : 
-              (
-              <>
-                <Box>
-                  <Box 
-                    alignItems='center'
-                    justifyContent='space-between'
-                    position='relative'
-                    fullWidth
-                    height="50vh"
-                    bgcolor={theme.palette.background.paper}
-                    padding={2}>
-                    {files.length > 0 && (
-                    <img
-                      src={files.length > 0 ? URL.createObjectURL(files[0]) : ''}
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'contain',
-                      }}
-                    /> 
-                    )}
-                    { files.length == 0 && (
-                      <img
-                        src={`https://images.unsplash.com/photo-1600354279787-0a726615ef44?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8MTJ8fGRvZ3MlMjBpbiUyMGZvcmVzdHxlbnwwfHwwfHx8MA%3D%3D`}
-                        style={{
-                          width: '100%',
-                          height: '100%',
-                          objectFit: 'cover',
-                        }}
-                      />
-                    )}
-                  </Box>
-                </Box>
-              </>
-              )}
-                <Box color={theme.palette.text.secondary} marginBottom={2} width="500px" alignItems={'center'} padding={2}>
-                  <TextField
-                    variant="outlined"
-                    fullWidth
-                    value={generatedText}
-                    readOnly
-                    disabled
-                    InputProps={{style: { color: 'white', fontWeight: 'bold' }}}
-                  />
-                </Box>
-              </Box>
-              <Box
-                position='fixed'
-                top='80%'
-                left='60%'
-              >
                 <Button
                   variant='contained'
                   color='primary'
@@ -211,15 +287,77 @@ const Classifier = () => {
                   onClick={sendData}
                   sx={{
                     padding: '1em 1.5em',
-                    fontSize: '1.3em',
+                    fontSize: '1.1em',
                     '&:hover': {
-                      border: `1px solid white`,
+                      border: `0.8px solid white`,
                     },
                   }}
                 >
                   Generate Caption
                 </Button>
               </Box>
+            </Grid>
+            <Grid item container xs={8} md={5} marginLeft={"28%"} position="fixed" style={{ height: '100%'}} >
+              <Box display="flex" flexDirection="column" alignItems="center" justifyContent="space-evenly" width="80%" height="68%" >
+                <CopyButton
+                  text={capitalizeFirstLetter(generatedText[0])}
+                  onSelect={() => handleSelect(0)}
+                  onDeselect={() => handleDeselect(0)}
+                  selected={selectedIndexes.includes(0)}
+                />
+                <CopyButton
+                  text={capitalizeFirstLetter(generatedText[1])}
+                  onSelect={() => handleSelect(1)}
+                  onDeselect={() => handleDeselect(1)}
+                  selected={selectedIndexes.includes(1)}
+                />
+                <CopyButton
+                  text={capitalizeFirstLetter(generatedText[2])}
+                  onSelect={() => handleSelect(2)}
+                  onDeselect={() => handleDeselect(2)}
+                  selected={selectedIndexes.includes(2)}
+                />
+                <CopyButton
+                  text={capitalizeFirstLetter(generatedText[3])}
+                  onSelect={() => handleSelect(3)}
+                  onDeselect={() => handleDeselect(3)}
+                  selected={selectedIndexes.includes(3)}
+                />
+                <CopyButton
+                  text={capitalizeFirstLetter(generatedText[4])}
+                  onSelect={() => handleSelect(4)}
+                  onDeselect={() => handleDeselect(4)}
+                  selected={selectedIndexes.includes(4)}
+                />
+                <TextField
+                  label="Type your suggestion"
+                  variant="outlined"
+                  fullWidth
+                  value={userSuggestion}
+                  onChange={handleUserSuggestionChange}
+                  style={{
+                    textAlign: 'center',
+                    color: 'white',
+                    border: '0.1px solid white',
+                    borderRadius: '5px',
+                    backgroundColor: 'transparent',
+                  }}
+                />
+              <Box  display="flex" justifyContent="space-between" fullWidth marginBottom={-3}> 
+                <Button variant='contained' sx={{padding: '0.7em 1.3em', fontSize: '1.1em', '&:hover': { border: `0.8px solid white`},}} size='large'
+                         color='primary' onClick={handleSave} style={{textTransform: 'none' }} >
+                  Save image with new filename
+                </Button>
+                <Button></Button>
+                <Button variant='contained' sx={{padding: '0.7em 1.3em', fontSize: '1.1em', '&:hover': { border: `0.8px solid white`},}} size='large'
+                         color='primary' onClick={handleSaveToCSV} style={{textTransform: 'none' }}>
+                  Submit your feedback
+                </Button>
+              </Box>
+                </Box>
+            </Grid>
+            </Grid>
+          )}
             </Grid>
           </Grid>
         </Grid>

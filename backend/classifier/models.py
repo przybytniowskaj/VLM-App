@@ -12,9 +12,12 @@ from .utils import perform_semantic_search
 from rest_framework.response import Response
 import ssl
 
+processorBlip = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
+modelBlip = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-base")
+
 class Classifier(models.Model):
   image = models.ImageField(upload_to='images')
-  result = models.CharField(max_length=250, blank=True)
+  result = models.TextField(blank=True, null=True)
   date_uploaded = models.DateTimeField(auto_now_add=True)
 
   def __str__(self):
@@ -23,14 +26,13 @@ class Classifier(models.Model):
   def save(self, *args, **kwargs):
     try:
       ssl._create_default_https_context = ssl._create_unverified_context
-      processor = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-large")
-      model = BlipForConditionalGeneration.from_pretrained("Salesforce/blip-image-captioning-large")  
+      
       img = PIL.Image.open(self.image)
-      inputs = processor(img, return_tensors="pt")
-      out = model.generate(**inputs)
-      generated_text = processor.decode(out[0], skip_special_tokens=True)
+      inputs = processorBlip(img, return_tensors="pt")
+      out = modelBlip.generate(**inputs, num_return_sequences=5,num_beams=5, do_sample=True)
+ 
+      generated_text = [processorBlip.decode(output, skip_special_tokens=True) for output in out]
       self.result = generated_text
-      print(generated_text)
 
       print('Success')
     except Exception as e:

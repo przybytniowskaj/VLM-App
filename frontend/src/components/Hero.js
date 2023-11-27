@@ -17,10 +17,10 @@ const Hero = () => {
   };
 
   return (
-    <Box height='60em' position={'flex'}
+    <Box height='92vh' position={'flex'}
       sx={{
         backgroundImage: `url(https://images.unsplash.com/photo-1510127034890-ba27508e9f1c?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D)`,
-        backgroundSize: '100% 110%',        
+        backgroundSize: '100% 120%',        
         backgroundRepeat: 'no-repeat',
         backgroundPosition: 'center center',
       }}
@@ -29,7 +29,7 @@ const Hero = () => {
       maxWidth={{ sm: 7120, md: 11236 }}
       width={1}
       margin='0 auto'
-      paddingTop={10}
+      paddingTop={5}
       >
       <Grid container spacing={4} marginTop='0px'>
         <Grid item xs={12} md={6} sx={{ order: { xs: 2, md: 1 } }}>
@@ -72,7 +72,7 @@ const Hero = () => {
           sx={{ order: { xs: 1, md: 1 } }}>
       <Box
         data-aos='fade-up'
-        padding={22}
+        padding={16}
       >
           <Button onClick={goToBottom}
             component='a'
