@@ -15,6 +15,8 @@ const Classifier = () => {
   const [features, setFeatures] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const [secondSearch, setSecondSearch] = useState(false);
+  const [firstSearch, setFirstSearch] = useState(true);
+  const [ flickr, setFlickr ] = useState(null);
   const defaultPhotos = [ `https://images.unsplash.com/photo-1504598318550-17eba1008a68?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NDJ8fHRyYXZlbHxlbnwwfHwwfHx8MA%3D%3D`,
                           `https://images.unsplash.com/photo-1469854523086-cc02fe5d8800?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NHx8dHJhdmVsfGVufDB8fDB8fHww`,
                           `https://plus.unsplash.com/premium_photo-1677343210638-5d3ce6ddbf85?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxzZWFyY2h8Mnx8dHJhdmVsfGVufDB8fDB8fHww`,
@@ -32,26 +34,54 @@ const Classifier = () => {
   const closeModal = () => {
     setModalOpen(false);
   };
-  
-  const handleTextChange = (event) => {
-    if (!secondSearch) {
-      alert('Please upload photos first :)');
-      return;
-    }
-    setTextInputValue(event.target.value);
+
+  const setToDefault = () => {
+    setFirstSearch(true);
+    setSecondSearch(false);
   };
 
-  const sendDataToMainPage = (data) => {
+  const fetchFlickrData = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/api/get_flickr_images/');
+      const flickrImages = await response.json();
+      // setImages(flickrImages);   
+      setFlickr(flickrImages);     
+    } catch (error) {
+      console.error('Error fetching Flickr images:', error);
+    }
+  };
+
+  const handleTextChange = (event) => {
+    setTextInputValue(event.target.value);
+    console.log("siema1")
+    if (!secondSearch && firstSearch) { //
+      console.log("siema2")
+      fetchFlickrData();  
+      setFirstSearch(false);    
+    }
+  };
+
+  const setSearch = () => {
     setSecondSearch(true);
+    sendDataToMainPage();
+  };
+
+  const sendDataToMainPage = () => {
+    
     axios.get(`http://127.0.0.1:8000/api/semanticimagesearch/get_semantic_image_search`, {
         headers: {
           accept: 'application/json',
         },
       }).then((response) => {
+        console.log(secondSearch);
         setTextInputValue(response.data.query);
         setResult(response.data.result.split(',').map((item) => parseInt(item.trim(), 10)));
         setImages(response.data.images);
-        setFeatures(response.data.image_features);
+        if (secondSearch){
+          console.log("siema")
+          
+          setFeatures(response.data.image_features)
+        };
       })
       .catch((err) => console.log(err));
   };
@@ -75,13 +105,16 @@ const Classifier = () => {
         formData.append('images', imageFile);
       }
     } else {
-      for (let i = 0; i < images.length; i++) {
-        formData.append('images', images[i].image);
-      }
+      for (const imageURL of flickr) {
+        const response = await fetch(`http://127.0.0.1:8000${imageURL}`);
+        const imageBlob = await response.blob();
+        const imageFile = new File([imageBlob], imageURL.split('/').pop(), { type: 'image/*' });
+        formData.append('images', imageFile);
+      }    
+      formData.append('flickr_flag', true);
     }
     formData.append('image_features', JSON.stringify(features));
     formData.append('query', textInputValue);
-
 
     axios({
           method: 'post',
@@ -106,11 +139,11 @@ const Classifier = () => {
     >
       <Grid container spacing={4} style={{ height: '80vh' }}>
       
-        <Grid item xs={12} md={4} position='fixed' style={{ width:'100%', height: '60%', marginTop: '4%', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        <Grid item xs={12} md={4} position='fixed' style={{ width:'100%', height: '75%', marginTop: '4%', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
           <TextField
             label="Type phrase and press enter"
             variant="outlined"
-            style={{ width: '80%', marginBottom:'10%', color:'white' }}
+            style={{ width: '80%', marginBottom:'5%', color:'white' }}
             value={textInputValue}
             onChange={handleTextChange}
             onKeyDown={handleEnterKeyPress}
@@ -120,6 +153,9 @@ const Classifier = () => {
           </Button>
           <Button variant="contained" color="primary" onClick={() => openModal(1)} style={{ width: '80%', height: '40%', margin: '4% auto', flexGrow: 1 }}>
             <Typography variant='h6'>Choose photos from catalog</Typography>
+          </Button>
+          <Button variant="contained" color="primary" onClick={setToDefault} style={{ width: '80%', height: '40%', margin: '4% auto', flexGrow: 1 }}>
+            <Typography variant='h6'>Search From Flickr Images</Typography>
           </Button>
         </Grid>
         <Grid item container xs={12} md={8} style={{ marginLeft:'35%' }}>
@@ -154,7 +190,7 @@ const Classifier = () => {
         </Grid>
       </Grid>
       </Box>
-      <CustomModal isOpen={isModalOpen} onRequestClose={closeModal} initialTab={initialTab}  sendDataToMainPage={sendDataToMainPage}/>
+      <CustomModal isOpen={isModalOpen} onRequestClose={closeModal} initialTab={initialTab} setSearch={setSearch}/>
       </>
   );
 };

@@ -2,7 +2,7 @@
 .DS_Store
 .next/
 db.sqlite3
-media/
+media/images/
 node_modules/ 
 venv/
 */migrations/*

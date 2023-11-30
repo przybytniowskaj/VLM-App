@@ -12,7 +12,6 @@ from .utils import perform_semantic_search
 import ssl, os
 
 def get_image_path(instance, filename):
-    # Construct the file path
     return os.path.join('images', filename)
 
 processorBlip = BlipProcessor.from_pretrained("Salesforce/blip-image-captioning-base")
@@ -57,7 +56,8 @@ class Image(models.Model):
 
 class SemanticImageSearch(models.Model):
     query = models.TextField()
-    result = models.CharField(max_length=250, blank=True)
+    result = models.CharField(max_length=1000, blank=True)
+    result_full = models.TextField()
     date_uploaded = models.DateTimeField(auto_now_add=True)
     images = models.ManyToManyField(Image)
     image_features = models.JSONField(blank=True, null=True)

@@ -21,5 +21,5 @@ class SemanticImageSearchSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = SemanticImageSearch
-        fields = ['query', 'result', 'date_uploaded', 'images', 'image_features']
+        fields = ['query', 'result', 'result_full', 'date_uploaded', 'images', 'image_features']
 

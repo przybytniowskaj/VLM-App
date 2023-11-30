@@ -8,7 +8,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import ImageDropzone from '../components/ImageDropzone';
 
-const UploadFromDevice = ({ closeModal, sendDataToMainPage }) => {
+const UploadFromDevice = ({ closeModal, setSearch }) => {
     const theme = useTheme();
     const [files, setFiles] = useState([]);
     const [isLoading, setIsLoading] = useState(false);
@@ -43,7 +43,7 @@ const UploadFromDevice = ({ closeModal, sendDataToMainPage }) => {
           data: formData
       }).then(function (response) {
         setIsLoading(false);
-        sendDataToMainPage(response.data);
+        setSearch();
         closeModal();
       }).catch(function (error) {
           console.log(error);
@@ -111,7 +111,7 @@ const UploadFromDevice = ({ closeModal, sendDataToMainPage }) => {
   );
 
 
- const PopupWindow = ({ isOpen, onRequestClose, initialTab, sendDataToMainPage }) => {
+ const PopupWindow = ({ isOpen, onRequestClose, initialTab, setSearch }) => {
     const [activeTab, setActiveTab] = useState(initialTab);
   
     const handleTabChange = (_, newValue) => {
@@ -145,7 +145,7 @@ const UploadFromDevice = ({ closeModal, sendDataToMainPage }) => {
                 <Tab label="Upload from Catalog" icon={<PhotoLibraryIcon />} />
             </Tabs>
             <CloseIcon style={{ cursor: 'pointer', position: 'absolute', top: '20px', right: '20px' }} onClick={onRequestClose}/>          
-            {activeTab === 0 && <UploadFromDevice closeModal={onRequestClose} sendDataToMainPage={sendDataToMainPage}/>}
+            {activeTab === 0 && <UploadFromDevice closeModal={onRequestClose} setSearch={setSearch} />}
             {activeTab === 1 && <UploadFromCatalog />}
         </Modal>
       );
