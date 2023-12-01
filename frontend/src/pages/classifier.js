@@ -56,7 +56,7 @@ const Classifier = () => {
   const [selectedIndexes, setSelectedIndexes] = useState([]);
   const [userSuggestion, setUserSuggestion] = useState('');
 
-  
+
 
   const handleUserSuggestionChange = (event) => {
     setUserSuggestion(event.target.value);
@@ -120,6 +120,31 @@ const Classifier = () => {
       })
       .catch((err) => console.log(err));
   };
+
+  const updateUploadedPhotos = (response) => {
+    const accessToken = localStorage.getItem('Token');
+
+    if (!accessToken) {
+        console.error('Brak dostępu do tokena w localStorage.');
+        return;
+    }
+
+    const uploadedPhotos = response.data.uploaded_photos;
+    const updatedUser = { ...user, uploaded_photos: uploadedPhotos };
+
+    axios
+      .post('http://127.0.0.1:8000/api/update-uploaded-photos/', updatedUser, {
+        headers: {
+          accept: 'application/json',
+          'content-type': 'application/json',
+          Authorization: `Bearer ${accessToken}`, 
+        },
+      })
+      .then(() => {
+        console.log('Uploaded photos updated successfully.');
+      })
+      .catch((err) => console.error('Error updating uploaded photos:', err));
+};
 
   const getClassificationResult = (obj) => {
     axios
@@ -241,7 +266,7 @@ const Classifier = () => {
                     height: '100%',
                     objectFit: 'contain',
                   }}
-                /> 
+                />
                 )}
                 { files.length == 0 && (
                   <img

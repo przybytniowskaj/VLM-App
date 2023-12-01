@@ -173,7 +173,6 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
           const userToken = localStorage.getItem('Token');
           alert('Login unsuccessful! Error ' + userToken);
 
-        // Jeśli token istnieje, wywołaj funkcję fetchUserUploadedPhotos
         if (userToken) {
           fetchUserUploadedPhotos(userToken);
         }
