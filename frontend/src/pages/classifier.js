@@ -56,6 +56,8 @@ const Classifier = () => {
   const [selectedIndexes, setSelectedIndexes] = useState([]);
   const [userSuggestion, setUserSuggestion] = useState('');
 
+  
+
   const handleUserSuggestionChange = (event) => {
     setUserSuggestion(event.target.value);
   };

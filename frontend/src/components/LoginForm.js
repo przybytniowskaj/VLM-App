@@ -34,8 +34,11 @@ const LoginForm = () => {
 
       if (response.status == 200) {
         const data = await response.json();
-        console.log('Login successful:', data);
-        alert('Login successful! Welcome, ' + data.username);
+
+        localStorage.setItem('Token', data.token);
+        console.log(localStorage.getItem('Token'));
+        console.log(data.token);
+        alert('Login successful! Welcome, ' + data.username + data.token);
       } else {
         const errorData = await response.json();
         console.error('Login failed:', errorData);

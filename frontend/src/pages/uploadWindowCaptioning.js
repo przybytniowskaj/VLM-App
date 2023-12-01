@@ -22,6 +22,8 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
       onDrop(files);
     };
 
+
+
   
     return ( 
         <Grid container spacing={3}>
@@ -136,11 +138,45 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
     const theme = useTheme();
     const [catalogImages, setCatalogImages] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
+    const [userUploadedPhotos, setUserUploadedPhotos] = useState([]);
+
+
+    const fetchUserUploadedPhotos = async (token) => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/auth/user-profile/', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Token ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (response.status === 200) {
+          const userData = await response.json();
+          console.log('User uploaded photos:', userData.uploaded_photos);
+  
+          setUserUploadedPhotos(userData.uploaded_photos);
+        } else {
+          console.error('Failed to fetch user uploaded photos.');
+        }
+      } catch (error) {
+        console.error('An error occurred while fetching user uploaded photos:', error);
+      }
+    };
 
     useEffect(() => {
       axios.get('http://127.0.0.1:8000/api/classifier')
         .then(response => {
           setCatalogImages(response.data);
+
+
+          const userToken = localStorage.getItem('Token');
+          alert('Login unsuccessful! Error ' + userToken);
+
+        // Jeśli token istnieje, wywołaj funkcję fetchUserUploadedPhotos
+        if (userToken) {
+          fetchUserUploadedPhotos(userToken);
+        }
         })
         .catch(error => {
           console.error('Error fetching catalog images:', error);
@@ -160,6 +196,7 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
     };
 
     return (
+      
       <Box>
         {selectedImage && (
           <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" padding={2}>
@@ -217,6 +254,22 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
             </Grid>
           ))}
         </Grid>
+        <Box>
+      {userUploadedPhotos.length > 0 && (
+        <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" padding={2}>
+          <Typography variant="h6" style={{ marginBottom: '1em' }}>
+            Uploaded Photos:
+          </Typography>
+          <ul style={{ listStyleType: 'none', padding: 0 }}>
+            {userUploadedPhotos.map((photo, index) => (
+              <li key={index} style={{ textAlign: 'center' }}>
+                {photo}
+              </li>
+            ))}
+          </ul>
+        </Box>
+      )}
+    </Box>
       </Box>
     );
   };
