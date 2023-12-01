@@ -242,32 +242,25 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
             </Box>
           </Box>
         )}
-        <Grid container spacing={2}>
-          {catalogImages.map(image => (
-            <Grid item key={image.id} onClick={() => handleSelectImage(image)}>
-              <img
-                src={image.image}
-                alt={`Catalog Image ${image.id}`}
-                style={{ cursor: 'pointer', maxWidth: '100px', maxHeight: '100px' }}
-              />
-            </Grid>
-          ))}
-        </Grid>
         <Box>
-      {userUploadedPhotos.length > 0 && (
-        <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" padding={2}>
-          <Typography variant="h6" style={{ marginBottom: '1em' }}>
-            Uploaded Photos:
-          </Typography>
-          <ul style={{ listStyleType: 'none', padding: 0 }}>
-            {userUploadedPhotos.map((photo, index) => (
-              <li key={index} style={{ textAlign: 'center' }}>
-                {photo}
-              </li>
-            ))}
-          </ul>
-        </Box>
-      )}
+  {userUploadedPhotos.length > 0 && (
+    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" padding={2}>
+      <Typography variant="h6" style={{ marginBottom: '1em' }}>
+        Uploaded Photos:
+      </Typography>
+      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+        {userUploadedPhotos.map((photo, index) => (
+          <img
+            key={index}
+            src={photo}
+            alt={`Uploaded Photo ${index + 1}`}
+            style={{ cursor: 'pointer', maxWidth: '100%', maxHeight: '200px', margin: '0.5em' }}
+            onClick={() => handleSelectImage({ image: photo })}
+          />
+        ))}
+      </div>
+    </Box>
+  )}
     </Box>
       </Box>
     );
