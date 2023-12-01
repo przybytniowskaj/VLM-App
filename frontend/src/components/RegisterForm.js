@@ -33,7 +33,7 @@ const RegisterForm = () => {
         window.location.href = '/login';
          
       } else {
-        console.error('Registration failed'); // Handle registration failure
+        console.error('Registration failed');
       }
     } catch (error) {
       console.error('An error occurred during registration:', error);

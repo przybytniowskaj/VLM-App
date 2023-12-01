@@ -29,6 +29,7 @@ class CustomUserManager(BaseUserManager):
         return self.create_user(email=email, password=password, **extra_fields)
 
 
+
 class User(AbstractUser):
     email = models.CharField(max_length=80, unique=True)
     username = models.CharField(max_length=45)
@@ -37,6 +38,8 @@ class User(AbstractUser):
     objects = CustomUserManager()
     USERNAME_FIELD = "email"
     REQUIRED_FIELDS = ["username"]
+
+    uploaded_photos = models.JSONField(blank=True, null=True, default=list, help_text="List of image URLs")
 
     def __str__(self):
         return self.username

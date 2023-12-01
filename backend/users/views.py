@@ -1,4 +1,6 @@
+from django.contrib.auth import authenticate
 from django.shortcuts import render
+from rest_framework import generics, status
 from .serializers import SignUpSerializer
 from rest_framework import generics, status
 from rest_framework.response import Response
@@ -36,9 +38,8 @@ class LoginView(APIView):
 
         if user is not None:
 
-            tokens = create_jwt_pair_for_user(user)
-
-            response = {"message": "Login Successfull", "tokens": tokens}
+            response = {"message": "Login Successfull", "username": user.username, "token": user.auth_token.key }
+            
             return Response(data=response, status=status.HTTP_200_OK)
 
         else:
@@ -52,7 +53,37 @@ class LoginView(APIView):
         }
 
         return Response(data= content, status=status.HTTP_200_OK)
-    
 
+from rest_framework.views import APIView
+from rest_framework.response import Response
+from rest_framework import status
+from rest_framework.decorators import action
+from rest_framework.permissions import IsAuthenticated, AllowAny
+from django.contrib.auth import get_user_model
+from .serializers import SignUpSerializer
+
+User = get_user_model()
+
+
+class UserProfileAPIView(APIView):
+    permission_classes = [IsAuthenticated]
+
+    def get(self, request):
+        user = request.user
+        serializer = SignUpSerializer(user)
+        return Response(serializer.data)
+
+    def post(self, request):
+        try:
+            user = request.user
+            uploaded_photos = request.data.get('uploaded_photos', [])
+
+            # Update the uploaded_photos field
+            user.uploaded_photos.extend(uploaded_photos)
+            user.save()
+
+            return Response({'message': 'Uploaded photos updated successfully.'})
+        except Exception as e:
+            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
 
 

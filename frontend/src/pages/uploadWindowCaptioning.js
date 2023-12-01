@@ -132,9 +132,94 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
     );
   };
   
-  const UploadFromCatalog = () => (
-      <h3>Upload from Catalog</h3>
-  );
+  const UploadFromCatalog = ({ onDrop, closeModal }) => {
+    const theme = useTheme();
+    const [catalogImages, setCatalogImages] = useState([]);
+    const [selectedImage, setSelectedImage] = useState(null);
+
+    useEffect(() => {
+      axios.get('http://127.0.0.1:8000/api/classifier')
+        .then(response => {
+          setCatalogImages(response.data);
+        })
+        .catch(error => {
+          console.error('Error fetching catalog images:', error);
+        });
+    }, []);
+
+    const handleSelectImage = (image) => {
+      setSelectedImage(image);
+    };
+
+    const handleSubmitImage = () => {
+      if (selectedImage) {
+        onDrop(selectedImage.image);
+        setSelectedImage(null);
+        closeModal();
+      }
+    };
+
+    return (
+      <Box>
+        {selectedImage && (
+          <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" padding={2}>
+            <Box flex="1" color={'white'} marginBottom={2}>
+              <Typography variant="h6" style={{ marginBottom: '1em' }}>
+                Loaded image:
+              </Typography>
+              <Box flex="1" height="20em" style={{ border: '10px solid white' }}>
+                <img
+                  src={selectedImage.image}
+                  alt="Selected Image"
+                  style={{
+                    width: '100%',
+                    height: '100%',
+                    objectFit: 'contain',
+                    margin: 0,
+                    padding: 0,
+                    background: 'white',
+                  }}
+                />
+              </Box>
+            </Box>
+
+            <Box>
+              <Button
+                variant="contained"
+                color="primary"
+                size="large"
+                alignItems="center"
+                disableElevation={true}
+                onClick={handleSubmitImage}
+                sx={{
+                  fontSize: '18px',
+                  border: '1px solid transparent',
+                  '&:hover': {
+                    backgroundColor: 'transparent',
+                    color: theme.palette.primary.main,
+                    border: `2px solid ${theme.palette.primary.main}`,
+                  },
+                }}
+              >
+                Submit image
+              </Button>
+            </Box>
+          </Box>
+        )}
+        <Grid container spacing={2}>
+          {catalogImages.map(image => (
+            <Grid item key={image.id} onClick={() => handleSelectImage(image)}>
+              <img
+                src={image.image}
+                alt={`Catalog Image ${image.id}`}
+                style={{ cursor: 'pointer', maxWidth: '100px', maxHeight: '100px' }}
+              />
+            </Grid>
+          ))}
+        </Grid>
+      </Box>
+    );
+  };
 
 
  const PopupWindow = ({ isOpen, onRequestClose, initialTab, onDrop }) => {
@@ -172,7 +257,7 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
             </Tabs>
             <CloseIcon style={{ cursor: 'pointer', position: 'absolute', top: '20px', right: '20px' }} onClick={onRequestClose}/>          
             {activeTab === 0 && <UploadFromDevice onDrop={onDrop} closeModal ={onRequestClose}/>}
-            {activeTab === 1 && <UploadFromCatalog />}
+            {activeTab === 1 && <UploadFromCatalog onDrop={onDrop} closeModal={onRequestClose} />}
         </Modal>
       );
     };

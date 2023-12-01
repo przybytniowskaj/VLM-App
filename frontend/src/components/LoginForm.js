@@ -5,6 +5,7 @@ const LoginForm = () => {
   const theme = useTheme();
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -16,7 +17,9 @@ const LoginForm = () => {
 
   const handleLogin = async () => {
     try {
-      const response = await fetch('/auth/login/', {
+      setIsLoading(true);
+
+      const response = await fetch('http://127.0.0.1:8000/auth/login/', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -27,15 +30,19 @@ const LoginForm = () => {
         }),
       });
 
-      if (response.ok) {
+      setIsLoading(false);
+
+      if (response.status == 200) {
         const data = await response.json();
-        console.log(data); // Do something with the successful login response
-        
+        console.log('Login successful:', data);
+        alert('Login successful! Welcome, ' + data.username);
       } else {
         const errorData = await response.json();
-        console.error(errorData); // Handle the login error
+        console.error('Login failed:', errorData);
+        alert('Login unsuccessful! Error ' + errorData);
       }
     } catch (error) {
+      setIsLoading(false);
       console.error('An error occurred during login:', error);
     }
   };
@@ -64,15 +71,14 @@ const LoginForm = () => {
               onChange={handlePasswordChange}
             />
           </Grid>
-          <Grid item xs={12} display="flex"
-            justifyContent="center"
-            alignItems="center">
+          <Grid item xs={12} display="flex" justifyContent="center" alignItems="center">
             <Button
               variant="contained"
               color="primary"
               onClick={handleLogin}
+              disabled={isLoading}
             >
-              Login
+              {isLoading ? <LinearProgress color="success" size={20} /> : 'Login'}
             </Button>
           </Grid>
         </Grid>
