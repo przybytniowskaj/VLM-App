@@ -71,12 +71,18 @@ class UserProfileAPIView(APIView):
     def get(self, request):
         user = request.user
         serializer = SignUpSerializer(user)
-        return Response(serializer.data)
+
+        user_data = serializer.data
+        user_data['uploaded_photos'] = user.uploaded_photos
+        return Response(user_data)
 
     def post(self, request):
         try:
             user = request.user
             uploaded_photos = request.data.get('uploaded_photos', [])
+
+            if not isinstance(uploaded_photos, list):
+                uploaded_photos = [uploaded_photos]
 
             # Update the uploaded_photos field
             user.uploaded_photos.extend(uploaded_photos)
@@ -85,5 +91,3 @@ class UserProfileAPIView(APIView):
             return Response({'message': 'Uploaded photos updated successfully.'})
         except Exception as e:
             return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-
-
