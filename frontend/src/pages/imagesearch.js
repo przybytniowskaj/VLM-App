@@ -44,7 +44,6 @@ const Classifier = () => {
     try {
       const response = await fetch('http://127.0.0.1:8000/api/get_flickr_images/');
       const flickrImages = await response.json();
-      // setImages(flickrImages);   
       setFlickr(flickrImages);     
     } catch (error) {
       console.error('Error fetching Flickr images:', error);
@@ -53,9 +52,7 @@ const Classifier = () => {
 
   const handleTextChange = (event) => {
     setTextInputValue(event.target.value);
-    console.log("siema1")
-    if (!secondSearch && firstSearch) { //
-      console.log("siema2")
+    if (!secondSearch && firstSearch) { 
       fetchFlickrData();  
       setFirstSearch(false);    
     }
@@ -73,17 +70,14 @@ const Classifier = () => {
           accept: 'application/json',
         },
       }).then((response) => {
-        console.log(secondSearch);
+        // console.log(secondSearch);
         setTextInputValue(response.data.query);
         setResult(response.data.result.split(',').map((item) => parseInt(item.trim(), 10)));
         setImages(response.data.images);
-        if (secondSearch){
-          console.log("siema")
-          
-          setFeatures(response.data.image_features)
-        };
+        setFeatures(response.data.image_features)
       })
       .catch((err) => console.log(err));
+      
   };
 
   const handleEnterKeyPress = (event) => {
@@ -113,6 +107,7 @@ const Classifier = () => {
       }    
       formData.append('flickr_flag', true);
     }
+    console.log(features);
     formData.append('image_features', JSON.stringify(features));
     formData.append('query', textInputValue);
 
