@@ -71,3 +71,10 @@ class UserCaptionChoices(models.Model):
 
     def __str__(self):
         return f"Caption for {self.image_path}"
+
+class UserSearchChoices(models.Model):
+    image_path = models.CharField(max_length=255)
+    phrase = models.TextField()
+
+    def __str__(self):
+        return f"Search for {self.phrase}"

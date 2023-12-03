@@ -8,8 +8,8 @@ from django.conf import settings
 from django.views import View
 from pathlib import Path
 
-from .serializers import ClassifierSerializer, SemanticImageSearchSerializer, UserCaptionChoicesSerializer
-from .models import Classifier, SemanticImageSearch, UserCaptionChoices
+from .serializers import ClassifierSerializer, SemanticImageSearchSerializer, UserCaptionChoicesSerializer, UserSearchChoicesSerializer
+from .models import Classifier, SemanticImageSearch, UserCaptionChoices, UserSearchChoices
 from .utils import perform_semantic_search, device, model, preprocess
 
 class ClassifierViewSet(viewsets.ModelViewSet):
@@ -70,6 +70,10 @@ class SearchViewSet(viewsets.ModelViewSet):
 class UserCaptionChoicesViewSet(viewsets.ModelViewSet):
     queryset = UserCaptionChoices.objects.all()
     serializer_class = UserCaptionChoicesSerializer
+
+class UserSearchChoicesViewSet(viewsets.ModelViewSet):
+    queryset = UserSearchChoices.objects.all()
+    serializer_class = UserSearchChoicesSerializer
 
 class GetFlickrImagesView(View):
     def get(self, request):

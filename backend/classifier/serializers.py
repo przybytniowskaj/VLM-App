@@ -1,10 +1,15 @@
 from rest_framework import serializers
-from .models import Classifier, SemanticImageSearch, Image, UserCaptionChoices
+from .models import Classifier, SemanticImageSearch, Image, UserCaptionChoices, UserSearchChoices
 
 class UserCaptionChoicesSerializer(serializers.ModelSerializer):
     class Meta:
         model = UserCaptionChoices
         fields = ['image_path', 'caption']
+
+class UserSearchChoicesSerializer(serializers.ModelSerializer):
+    class Meta:
+        model = UserSearchChoices
+        fields = ['image_path', 'phrase']
 
 class ClassifierSerializer(serializers.ModelSerializer):
   class Meta:
