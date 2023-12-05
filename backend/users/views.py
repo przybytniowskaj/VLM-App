@@ -2,6 +2,7 @@ from django.contrib.auth import authenticate
 from django.shortcuts import render
 from rest_framework import generics, status
 from .serializers import SignUpSerializer
+from .models import User
 from rest_framework import generics, status
 from rest_framework.response import Response
 from rest_framework.request import Request
@@ -43,7 +44,8 @@ class LoginView(APIView):
             return Response(data=response, status=status.HTTP_200_OK)
 
         else:
-            return Response(data={"message": "Invalid email or password"})
+            response = {"message": "Invalid email or password"}
+            return Response(data=response, status=status.HTTP_401_UNAUTHORIZED)
 
     def get(self, request:Request):
         content={
