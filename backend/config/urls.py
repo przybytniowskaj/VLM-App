@@ -6,7 +6,7 @@ from django.conf import settings
 
 
 urlpatterns = [
-    path('admin/', admin.site.urls),
+    #path('admin/', admin.site.urls),
     path('api/', include('classifier.urls')),
     path('auth/', include('users.urls')),
     # re_path(r"^.*",ServeReactView.as_view(),name="serve_web_client_view")
