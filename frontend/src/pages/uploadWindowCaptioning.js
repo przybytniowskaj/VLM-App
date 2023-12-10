@@ -111,7 +111,7 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
                         size='large'
                         alignItems = 'center'
                         disableElevation={true}
-                        onClick={closeModal}
+                        onClick={closeModal} 
                         sx={{
                         fontSize: '18px',
                         border: '1px solid transparent',
@@ -139,48 +139,6 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
     const [catalogImages, setCatalogImages] = useState([]);
     const [selectedImage, setSelectedImage] = useState(null);
     const [userUploadedPhotos, setUserUploadedPhotos] = useState([]);
-
-
-    const fetchUserUploadedPhotos = async (token) => {
-      try {
-        const response = await fetch('http://127.0.0.1:8000/auth/user-profile/', {
-          method: 'GET',
-          headers: {
-            'Authorization': `Token ${token}`,
-            'Content-Type': 'application/json',
-          },
-        });
-  
-        if (response.status === 200) {
-          const userData = await response.json();
-          console.log('User uploaded photos:', userData.uploaded_photos);
-  
-          setUserUploadedPhotos(userData.uploaded_photos);
-        } else {
-          console.error('Failed to fetch user uploaded photos.');
-        }
-      } catch (error) {
-        console.error('An error occurred while fetching user uploaded photos:', error);
-      }
-    };
-
-    useEffect(() => {
-      axios.get('http://127.0.0.1:8000/api/classifier')
-        .then(response => {
-          setCatalogImages(response.data);
-
-
-          const userToken = localStorage.getItem('Token');
-          alert('Login unsuccessful! Error ' + userToken);
-
-        if (userToken) {
-          fetchUserUploadedPhotos(userToken);
-        }
-        })
-        .catch(error => {
-          console.error('Error fetching catalog images:', error);
-        });
-    }, []);
 
     const handleSelectImage = (image) => {
       setSelectedImage(image);
@@ -301,7 +259,7 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
                 <Tab label="Upload from Catalog" icon={<PhotoLibraryIcon />} />
             </Tabs>
             <CloseIcon style={{ cursor: 'pointer', position: 'absolute', top: '20px', right: '20px' }} onClick={onRequestClose}/>          
-            {activeTab === 0 && <UploadFromDevice onDrop={onDrop} closeModal ={onRequestClose}/>}
+            {activeTab === 0 && <UploadFromDevice onDrop={onDrop} closeModal ={onRequestClose} />}
             {activeTab === 1 && <UploadFromCatalog onDrop={onDrop} closeModal={onRequestClose} />}
         </Modal>
       );

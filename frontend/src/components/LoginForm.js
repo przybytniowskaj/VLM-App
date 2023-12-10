@@ -38,7 +38,7 @@ const LoginForm = () => {
         localStorage.setItem('Token', data.token);
         console.log(localStorage.getItem('Token'));
         console.log(data.token);
-        alert('Login successful! Welcome, ' + data.username + data.token);
+        alert('Login successful! Welcome, ' + data.username);
       } else {
         const errorData = await response.json();
         console.error('Login failed:', errorData);

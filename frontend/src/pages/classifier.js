@@ -106,6 +106,7 @@ const Classifier = () => {
 
     const formData = new FormData();
     formData.append('image', files[0], files[0].name);
+    uploadPhoto(files[0].name)
 
     axios
       .post('http://127.0.0.1:8000/api/classifier/', formData, {
@@ -121,30 +122,37 @@ const Classifier = () => {
       .catch((err) => console.log(err));
   };
 
-  const updateUploadedPhotos = (response) => {
-    const accessToken = localStorage.getItem('Token');
-
-    if (!accessToken) {
-        console.error('Brak dostępu do tokena w localStorage.');
-        return;
+  const uploadPhoto = async (file) => {
+    const userToken = localStorage.getItem('Token');
+  
+    if (!userToken) {
+      console.error('User not authenticated');
+      return;
     }
-
-    const uploadedPhotos = response.data.uploaded_photos;
-    const updatedUser = { ...user, uploaded_photos: uploadedPhotos };
-
-    axios
-      .post('http://127.0.0.1:8000/api/update-uploaded-photos/', updatedUser, {
+  
+    try {
+      const formData = new FormData();
+      formData.append('uploaded_photos', file);
+  
+      const response = await fetch('http://127.0.0.1:8000/auth/user-profile/', {
+        method: 'POST',
         headers: {
-          accept: 'application/json',
-          'content-type': 'application/json',
-          Authorization: `Bearer ${accessToken}`, 
+          'Authorization': `Token ${userToken}`,
         },
-      })
-      .then(() => {
-        console.log('Uploaded photos updated successfully.');
-      })
-      .catch((err) => console.error('Error updating uploaded photos:', err));
-};
+        body: formData,
+      });
+  
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log('Uploaded photos updated successfully:', data.message);
+      } else {
+        const errorData = await response.json();
+        console.error('Error updating uploaded photos:', errorData.error);
+      }
+    } catch (error) {
+      console.error('An error occurred while uploading photo:', error);
+    }
+  };
 
   const getClassificationResult = (obj) => {
     axios
