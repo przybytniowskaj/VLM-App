@@ -182,10 +182,7 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
       axios.get('http://127.0.0.1:8000/api/classifier')
         .then(response => {
           setCatalogImages(response.data);
-
-
           const userToken = localStorage.getItem('Token');
-          alert('Login unsuccessful! Error ' + userToken);
 
         if (userToken) {
           fetchUserUploadedPhotos(userToken);
@@ -199,6 +196,7 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
     return (
       
       <Box>
+        
         {selectedImage && (
           <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" padding={2}>
             <Box flex="1" color={'white'} marginBottom={2}>
