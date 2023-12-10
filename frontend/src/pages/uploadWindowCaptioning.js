@@ -136,21 +136,65 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
   
   const UploadFromCatalog = ({ onDrop, closeModal }) => {
     const theme = useTheme();
+    const [files, setFiles] = useState([]);
     const [catalogImages, setCatalogImages] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
     const [selectedImage, setSelectedImage] = useState(null);
     const [userUploadedPhotos, setUserUploadedPhotos] = useState([]);
 
     const handleSelectImage = (image) => {
       setSelectedImage(image);
+      setIsLoading(true);
+      const newFiles = [selectedImage];
+      setFiles(newFiles);
+      setIsLoading(false);
+      onDrop(files);
     };
 
     const handleSubmitImage = () => {
-      if (selectedImage) {
-        onDrop(selectedImage.image);
-        setSelectedImage(null);
-        closeModal();
+        
+    };
+
+    const fetchUserUploadedPhotos = async (token) => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/auth/user-profile/', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Token ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (response.status === 200) {
+          const userData = await response.json();
+          console.log('User uploaded photos:', userData.uploaded_photos);
+  
+          setUserUploadedPhotos(userData.uploaded_photos);
+        } else {
+          console.error('Failed to fetch user uploaded photos.');
+        }
+      } catch (error) {
+        console.error('An error occurred while fetching user uploaded photos:', error);
       }
     };
+
+    useEffect(() => {
+      axios.get('http://127.0.0.1:8000/api/classifier')
+        .then(response => {
+          setCatalogImages(response.data);
+
+
+          const userToken = localStorage.getItem('Token');
+          alert('Login unsuccessful! Error ' + userToken);
+
+        if (userToken) {
+          fetchUserUploadedPhotos(userToken);
+        }
+        })
+        .catch(error => {
+          console.error('Error fetching catalog images:', error);
+        });
+    }, []);
 
     return (
       
@@ -184,7 +228,7 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
                 size="large"
                 alignItems="center"
                 disableElevation={true}
-                onClick={handleSubmitImage}
+                onClick={closeModal} 
                 sx={{
                   fontSize: '18px',
                   border: '1px solid transparent',
@@ -213,7 +257,7 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
             src={photo}
             alt={`Uploaded Photo ${index + 1}`}
             style={{ cursor: 'pointer', maxWidth: '100%', maxHeight: '200px', margin: '0.5em' }}
-            onClick={() => handleSelectImage({ image: photo })}
+            onClick={() => handleSelectImage({ image: photo})}
           />
         ))}
       </div>

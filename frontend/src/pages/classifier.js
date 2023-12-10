@@ -132,7 +132,9 @@ const Classifier = () => {
   
     try {
       const formData = new FormData();
-      formData.append('uploaded_photos', file);
+      
+      const prefixedFilePath = `http://127.0.0.1:8000/media/images/${file}`;
+      formData.append('uploaded_photos', prefixedFilePath);
   
       const response = await fetch('http://127.0.0.1:8000/auth/user-profile/', {
         method: 'POST',
