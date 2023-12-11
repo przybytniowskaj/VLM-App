@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Modal from 'react-modal';
 import axios from 'axios';
-import { Tabs, Tab, useTheme, Grid, LinearProgress, TextField, Box } from '@mui/material';
+import { Tabs, Tab, useTheme, Grid, LinearProgress, TextField, Box, Typography, Button} from '@mui/material';
 import CloudUploadIcon from '@mui/icons-material/CloudUpload';
 import PhotoLibraryIcon from '@mui/icons-material/PhotoLibrary';
 import CloseIcon from '@mui/icons-material/Close';
@@ -106,9 +106,144 @@ const UploadFromDevice = ({ closeModal, setSearch }) => {
     );
   };
   
-  const UploadFromCatalog = () => (
-      <h3>Upload from Catalog</h3>
-  );
+  const UploadFromCatalog = ({ closeModal, setSearch }) => {
+    
+    const theme = useTheme();
+    const [files, setFiles] = useState([]);
+    const [catalogImages, setCatalogImages] = useState([]);
+    const [isLoading, setIsLoading] = useState(false);
+    const [userUploadedPhotos, setUserUploadedPhotos] = useState([]);
+    const [textInputValue, setTextInputValue] = useState('');
+
+    
+
+
+
+
+    const handleSelectImage = async (imageFileName) => {
+      const newFiles = [];
+      for (const fileName of imageFileName) {
+        const response = await fetch(fileName);
+        const imageBlob = await response.blob();
+        const imageFile = new File([imageBlob], fileName, { type: 'image/*' });
+        newFiles.push(imageFile);
+      }
+      setFiles(newFiles);
+    };
+
+
+    const handleTextChange = (event) => {
+      setTextInputValue(event.target.value);
+    };
+
+    const handleEnterKeyPress = (event) => {
+      if (event.key === 'Enter') {
+        sendData();
+      }
+    };
+
+    const sendData = async () => {
+      setIsLoading(true);
+      const formData = new FormData();
+      for (let i = 0; i < files.length; i++) {
+        formData.append('images', files[i], files[i].name);
+      }
+      formData.append('query', textInputValue);
+      console.log('sswdwss');
+
+    axios({
+          method: 'post',
+          url: 'http://127.0.0.1:8000/api/semanticimagesearch/semantic_image_search/',
+          data: formData
+      }).then(function (response) {
+        setIsLoading(false);
+        setSearch();
+        closeModal();
+      }).catch(function (error) {
+          console.log(error);
+          setIsLoading(false);
+      })
+    };
+
+
+
+    const fetchUserUploadedPhotos = async (token) => {
+      try {
+        const response = await fetch('http://127.0.0.1:8000/auth/user-profile/', {
+          method: 'GET',
+          headers: {
+            'Authorization': `Token ${token}`,
+            'Content-Type': 'application/json',
+          },
+        });
+  
+        if (response.status === 200) {
+          const userData = await response.json();
+          console.log('User uploaded photos:', userData.uploaded_photos);
+  
+          setUserUploadedPhotos(userData.uploaded_photos);
+          await handleSelectImage(userData.uploaded_photos);
+          
+        } else {
+          console.error('Failed to fetch user uploaded photos.');
+        }
+      } catch (error) {
+        console.error('An error occurred while fetching user uploaded photos:', error);
+      }
+    };
+
+    useEffect(() => {
+      axios.get('http://127.0.0.1:8000/api/classifier')
+        .then(response => {
+          setCatalogImages(response.data);
+          const userToken = localStorage.getItem('Token');
+
+        if (userToken) {
+          fetchUserUploadedPhotos(userToken);
+        }
+        })
+        .catch(error => {
+          console.error('Error fetching catalog images:', error);
+        });
+    }, []);
+
+    return (
+      
+      <Box>
+        <Box padding={4} fullWidth>
+              <TextField
+                label=" Type key word for photos and press enter"
+                variant="outlined"
+                border={theme.palette.divider}
+                value={textInputValue}
+                fullWidth
+                onChange={handleTextChange}
+                onKeyDown={handleEnterKeyPress}
+              />
+            </Box>
+        <Box>
+  {userUploadedPhotos.length > 0 && (
+    <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" padding={2}>
+      <Typography variant="h6" style={{ marginBottom: '1em', color: 'white' , fontWeight: 'bold' }}>
+        YOUR PHOTOS:
+      </Typography>
+      <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', maxWidth: '1000px'}}>
+        {userUploadedPhotos.map((photo, index) => (
+          <img
+            key={index}
+            src={photo}
+            alt={`Uploaded Photo ${index + 1}`}
+            style={{ cursor: 'pointer', maxWidth: '100%', maxHeight: '100px', margin: '0.5em' , flex: '0 0 calc(1% - 1em)'}}
+          />
+        ))}
+      </div>
+
+    </Box>
+  )}
+    </Box>
+      </Box>
+    );
+  };
 
 
  const PopupWindow = ({ isOpen, onRequestClose, initialTab, setSearch }) => {
@@ -146,7 +281,7 @@ const UploadFromDevice = ({ closeModal, setSearch }) => {
             </Tabs>
             <CloseIcon style={{ cursor: 'pointer', position: 'absolute', top: '20px', right: '20px' }} onClick={onRequestClose}/>          
             {activeTab === 0 && <UploadFromDevice closeModal={onRequestClose} setSearch={setSearch} />}
-            {activeTab === 1 && <UploadFromCatalog />}
+            {activeTab === 1 && <UploadFromCatalog closeModal={onRequestClose} setSearch={setSearch}/>}
         </Modal>
       );
     };

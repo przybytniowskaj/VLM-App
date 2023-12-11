@@ -154,10 +154,6 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
       onDrop(newFiles);
     };
 
-    const handleSubmitImage = () => {
-        
-    };
-
     const fetchUserUploadedPhotos = async (token) => {
       try {
         const response = await fetch('http://127.0.0.1:8000/auth/user-profile/', {
@@ -251,13 +247,13 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
       <Typography variant="h6" style={{ marginBottom: '1em' }}>
         Uploaded Photos:
       </Typography>
-      <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+      <div style={{ display: 'flex', flexDirection: 'row', flexWrap: 'wrap', alignItems: 'center', justifyContent: 'center', maxWidth: '1000px'}}>
         {userUploadedPhotos.map((photo, index) => (
           <img
             key={index}
             src={photo}
             alt={`Uploaded Photo ${index + 1}`}
-            style={{ cursor: 'pointer', maxWidth: '100%', maxHeight: '200px', margin: '0.5em' }}
+            style={{ cursor: 'pointer', maxWidth: '100%', maxHeight: '200px', margin: '0.5em' , flex: '0 0 calc(25% - 1em)'}}
             onClick= { async () => await handleSelectImage(photo)}
           />
         ))}
