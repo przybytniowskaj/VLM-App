@@ -142,13 +142,16 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
     const [selectedImage, setSelectedImage] = useState(null);
     const [userUploadedPhotos, setUserUploadedPhotos] = useState([]);
 
-    const handleSelectImage = (image) => {
-      setSelectedImage(image);
+    const handleSelectImage = async (imageFileName) => {
+      setSelectedImage(imageFileName);
       setIsLoading(true);
-      const newFiles = [selectedImage];
+      const response = await fetch(imageFileName);
+      const imageBlob = await response.blob();
+      const imageFile = new File([imageBlob], imageFileName, { type: 'image/*' });
+      const newFiles = [imageFile];
       setFiles(newFiles);
       setIsLoading(false);
-      onDrop(files);
+      onDrop(newFiles);
     };
 
     const handleSubmitImage = () => {
@@ -205,7 +208,7 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
               </Typography>
               <Box flex="1" height="20em" style={{ border: '10px solid white' }}>
                 <img
-                  src={selectedImage.image}
+                  src={selectedImage}
                   alt="Selected Image"
                   style={{
                     width: '100%',
@@ -255,7 +258,7 @@ const UploadFromDevice = ({submitOnClick, onDrop, closeModal}) => {
             src={photo}
             alt={`Uploaded Photo ${index + 1}`}
             style={{ cursor: 'pointer', maxWidth: '100%', maxHeight: '200px', margin: '0.5em' }}
-            onClick={() => handleSelectImage({ image: photo})}
+            onClick= { async () => await handleSelectImage(photo)}
           />
         ))}
       </div>
