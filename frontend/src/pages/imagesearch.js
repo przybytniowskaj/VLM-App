@@ -76,10 +76,16 @@ const Classifier = () => {
       }).then((response) => {
         // console.log(secondSearch);
         setTextInputValue(response.data.query);
-        setResult(response.data.result.split(',').map((item) => parseInt(item.trim(), 10)));
-        setResultFull(response.data.result_full.split(',').map((item) => parseInt(item.trim(), 10)));
         setImages(response.data.images);
         setFeatures(response.data.image_features)
+        const newResult = response.data.result
+        if (newResult === "") {
+          setResult([]);
+        } else {
+          setResult(newResult.split(',').map((item) => parseInt(item.trim(), 10)));
+        }
+        setResultFull(response.data.result_full.split(',').map((item) => parseInt(item.trim(), 10)));
+        console.log(response.data.result.split(',').map((item) => parseInt(item.trim(), 10)));
         setSentData(true);
       })
       .catch((err) => console.log(err));
@@ -216,7 +222,7 @@ const Classifier = () => {
               </a>
             </Grid>
             )))}  
-            {result && showSelection && (resultFull.map((index) => (
+            {result && images && showSelection &&(resultFull.map((index) => (
               <Grid item key={index} sm={6} md={4} lg={4} alignItems={'center'} align-content='flex-start' padding={5} style={{ marginBottom: '2%' }}>
                 <div
                   onClick={() => handleImageSelect(index)}
@@ -279,7 +285,14 @@ const Classifier = () => {
                   />
                 </div>
               </Grid>
-            )))}  
+            )))}
+            {result && result.length === 0 && (
+              <Grid item xs={12} style={{ textAlign: 'center' }}>
+                <Typography variant="h5" color="error">
+                  No image matches this description. Please enter a different phrase.
+                </Typography>
+              </Grid>
+            )}
           </Grid>
         </Grid>
       </Grid>
