@@ -76,6 +76,9 @@ const UploadFromDevice = ({ closeModal, setSearch }) => {
                 fullWidth
                 onChange={handleTextChange}
                 onKeyDown={handleEnterKeyPress}
+                InputProps={{
+                  style: { color: 'white' }, 
+                }}
               />
             </Box>
             
@@ -219,6 +222,9 @@ const UploadFromDevice = ({ closeModal, setSearch }) => {
                 fullWidth
                 onChange={handleTextChange}
                 onKeyDown={handleEnterKeyPress}
+                InputProps={{
+                  style: { color: 'white' }, 
+                }}
               />
             </Box>
         <Box>

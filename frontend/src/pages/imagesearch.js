@@ -188,6 +188,11 @@ const Classifier = () => {
             value={textInputValue}
             onChange={handleTextChange}
             onKeyDown={handleEnterKeyPress}
+            InputProps={{
+              style: {
+                color: 'white',
+              },
+            }}          
           />
           <Button variant="contained" disableElevation={true} color="primary" onClick={() => openModal(0)} style={{ width: '80%', height: '40%', margin: '4% auto', flexGrow: 1 }}>
             <Typography variant='h6'>Upload photos from device</Typography>

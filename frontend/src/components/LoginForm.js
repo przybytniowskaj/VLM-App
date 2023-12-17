@@ -62,6 +62,9 @@ const LoginForm = () => {
               variant="outlined"
               value={email}
               onChange={handleEmailChange}
+              InputProps={{
+                style: { color: 'white' }, 
+              }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -72,6 +75,9 @@ const LoginForm = () => {
               variant="outlined"
               value={password}
               onChange={handlePasswordChange}
+              InputProps={{
+                style: { color: 'white' }, 
+              }}
             />
           </Grid>
           <Grid item xs={12} display="flex" justifyContent="center" alignItems="center">

@@ -53,6 +53,9 @@ const RegisterForm = () => {
               value={email}
               onChange={handleEmailChange}
               style = {{color: theme.palette.primary.contrastText}}
+              InputProps={{
+                style: { color: 'white' }, 
+              }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -63,6 +66,9 @@ const RegisterForm = () => {
               value={username}
               onChange={handleUsernameChange}
               style = {{color: theme.palette.primary.contrastText}}
+              InputProps={{
+                style: { color: 'white' }, 
+              }}
             />
           </Grid>
           <Grid item xs={12}>
@@ -74,6 +80,9 @@ const RegisterForm = () => {
               value={password}
               onChange={handlePasswordChange}
               style = {{color: theme.palette.primary.contrastText}}
+              InputProps={{
+                style: { color: 'white' }, 
+              }}
             />
           </Grid>
           <Grid item xs={12} display="flex"
