@@ -217,8 +217,19 @@ const Classifier = () => {
       marginTop={10}
     >
       <Grid container spacing={4} style={{ height: '80vh' }}>
-      
         <Grid item xs={12} md={4} position='fixed' style={{ width:'100%', height: '75%', marginTop: '4%', display: 'flex', flexDirection: 'column', alignItems: 'center'}}>
+        {sentData &&(
+          <Grid >
+              <Typography
+              style={{
+                color: 'white',
+                textAlign: 'center',
+                display: 'block',
+                paddingBottom: '1em',
+                }}>
+                Enter a new phrase, press enter, rediscover selected photos.
+                </Typography>
+          </Grid>)}
           <TextField
             label="Type phrase and press enter"
             variant="outlined"
@@ -254,7 +265,22 @@ const Classifier = () => {
           <Box  style={{ width: '85%', marginBottom: '1%'}}>
             {isLoading && (<LinearProgress color='success' />)}
           </Box>
+          {result && images && showSelection && (
+              <Typography
+                variant='h5'
+                style={{
+                  color: 'white',
+                  textAlign: 'center',
+                  display: 'block', 
+                  width: '90%',
+                  paddingBottom: '2em',
+                }}
+              >
+                Choose best matches by clicking on them, and submit your feedback to help develop machine learning models with us.
+              </Typography>
+            )}
           <Grid container spacing={1} style={{ height: '85vh',width:'90%', alignItems: 'center', justifyContent: 'center' }}>
+          
             {!result && (defaultPhotos.map((photo, index) => (    
             
               <Grid item key={index} sm={6} md={4} lg={4} alignItems={'center'} align-content='flex-start' style={{ marginBottom: '2px' }}>

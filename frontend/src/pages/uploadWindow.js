@@ -81,6 +81,16 @@ const UploadFromDevice = ({ closeModal, setSearch }) => {
                 }}
               />
             </Box>
+            <Grid item xs={12} >
+                <Typography
+                style={{
+                  color: 'white',
+                  textAlign: 'center',
+                  display: 'block',
+                  paddingBottom: '2em',
+                }}
+            >Please press enter to start your search</Typography>
+            </Grid>
             
             <Box
               display='flex'
@@ -212,26 +222,37 @@ const UploadFromDevice = ({ closeModal, setSearch }) => {
     return (
       
       <Box>
+        
+         <Grid item xs={12} padding={4}>
+          {isLoading && (<LinearProgress color='success' data-aos='zoom-out'/> )}
+        </Grid>
         <Box padding={4} fullWidth>
-              <TextField
-                label=" Type key word for photos and press enter"
-                variant="outlined"
-                border={theme.palette.divider}
-                value={textInputValue}
-                fullWidth
-                onChange={handleTextChange}
-                onKeyDown={handleEnterKeyPress}
-                InputProps={{
-                  style: { color: 'white' }, 
-                }}
-              />
-            </Box>
+            <TextField
+              label=" Type key word for photos and press enter"
+              variant="outlined"
+              border={theme.palette.divider}
+              value={textInputValue}
+              fullWidth
+              onChange={handleTextChange}
+              onKeyDown={handleEnterKeyPress}
+              InputProps={{
+                style: { color: 'white' }, 
+              }}
+            />
+        </Box>
+        <Grid item xs={12} >
+          <Typography
+          style={{
+            color: 'white',
+            textAlign: 'center',
+            display: 'block',
+            paddingBottom: '2em',
+          }}
+      >Please press enter to start your search</Typography>
+        </Grid>
         <Box>
   {userUploadedPhotos.length > 0 && (
     <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" padding={2}>
-      <Grid item xs={12} padding={4}>
-        {isLoading && (<LinearProgress color='success' data-aos='zoom-out'/> )}
-      </Grid>
       <Typography variant="h6" style={{ marginBottom: '1em', color: 'white' , fontWeight: 'bold' }}>
         YOUR PHOTOS:
       </Typography>
