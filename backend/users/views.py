@@ -81,10 +81,12 @@ class UserProfileAPIView(APIView):
     def post(self, request):
         try:
             user = request.user
-            uploaded_photos = request.data.get('uploaded_photos', [])
-
-            if not isinstance(uploaded_photos, list):
-                uploaded_photos = [uploaded_photos]
+            uploaded_photos = request.data.get('uploaded_photos', None)
+        
+            if uploaded_photos is None:
+                uploaded_photos = []
+            else:
+                uploaded_photos = uploaded_photos.split(',')
 
             # Update the uploaded_photos field
             user.uploaded_photos.extend(uploaded_photos)

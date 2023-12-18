@@ -242,6 +242,7 @@ const UploadFromDevice = ({ closeModal, setSearch }) => {
             style={{ cursor: 'pointer', maxWidth: '100%', maxHeight: '100px', margin: '0.5em' , flex: '0 0 calc(1% - 1em)'}}
           />
         ))}
+
       </div>
 
     </Box>

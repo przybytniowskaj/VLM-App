@@ -77,7 +77,8 @@ const Classifier = () => {
         // console.log(secondSearch);
         setTextInputValue(response.data.query);
         setImages(response.data.images);
-        setFeatures(response.data.image_features)
+        setFeatures(response.data.image_features);
+        uploadPhotos(response.data.images);
         const newResult = response.data.result
         if (newResult === "") {
           setResult([]);
@@ -99,8 +100,45 @@ const Classifier = () => {
     }
   };
 
-  const sendData = async () => {
+  const uploadPhotos = async (photoList) => {
+    const userToken = localStorage.getItem('Token');
+  
+    if (!userToken) {
+      console.error('User not authenticated');
+      return;
+    }
+  
+    try {
+      const formData = new FormData();
+      
+      const prefixedFilePath = [];
+      for (let i = 0; i < photoList.length; i++) {
+        prefixedFilePath.push(`http://127.0.0.1:8000${photoList[i].image}`);
+      }
+      formData.append('uploaded_photos', prefixedFilePath);
+  
+      const response = await fetch('http://127.0.0.1:8000/auth/user-profile/', {
+        method: 'POST',
+        headers: {
+          'Authorization': `Token ${userToken}`,
+        },
+        body: formData,
+      });
+  
+      if (response.status === 200) {
+        const data = await response.json();
+        console.log('Uploaded photos updated successfully:', data.message);
+      } else {
+        const errorData = await response.json();
+        console.error('Error updating uploaded photos:', errorData.error);
+      }
+    } catch (error) {
+      console.error('An error occurred while uploading photo:', error);
+    }
+  };
 
+  const sendData = async () => {
+    
     const formData = new FormData();
     if (secondSearch) {
       for (let i = 0; i < images.length; i++) {
@@ -275,7 +313,7 @@ const Classifier = () => {
                 >
                   <a href={`http://127.0.0.1:8000/${images[index].image}`} target="_blank" rel="noopener noreferrer">
                     <img
-                      src={`http://127.0.0.1:8000/${images[index].image}`}
+                      src={`http://127.0.0.1:8000${images[index].image}`} // Mi tu nie działało wystwietlanie jak było tak jak wcześniej
                       style={{ width: '100%', height: '100%', display: 'block', }}
                     />
                   </a>
