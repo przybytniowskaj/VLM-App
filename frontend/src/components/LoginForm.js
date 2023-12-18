@@ -6,6 +6,8 @@ const LoginForm = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [isLoading, setIsLoading] = useState(false);
+  const [isLogged, setIsLogged] = useState(false);
+  const [user, setUser] = useState('');
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -37,8 +39,9 @@ const LoginForm = () => {
 
         localStorage.setItem('Token', data.token);
         console.log(localStorage.getItem('Token'));
+        setIsLogged(true);
+        setUser(data.username);
         console.log(data.token);
-        alert('Login successful! Welcome, ' + data.username);
       } else {
         const errorData = await response.json();
         console.error('Login failed:', errorData);
@@ -52,7 +55,42 @@ const LoginForm = () => {
 
   return (
     <Box>
-      <Typography variant="h6">Login Form</Typography>
+      {isLogged &&(
+                <>
+                <Typography variant="h2" style={{
+                color: 'white',
+                textAlign: 'center',
+                display: 'block',
+                paddingBottom: '2em',
+                }}>  {user ? `Login successful! Welcome,  ${user}!` : 'Welcome, User!'} </Typography>
+
+                <Button
+                  color="primary"
+                  href="\"
+                  sx={{
+                    height: '2em',
+                    marginRight: '1em',
+                    padding: '3em',
+                    display: 'flex',
+                    flexDirection: 'column',
+                    alignItems: 'center', 
+                    justifyContent: 'center',
+                    fontSize: '1.2em',
+                    color: '#fff', 
+                    fontWeight: 'bold',
+                  }}>Click to go to Home page</Button>
+                  <br /> 
+                  </>
+
+                )}
+
+              
+      <Typography variant="h6" style={{
+                color: 'white',
+                textAlign: 'center',
+                display: 'block',
+                paddingBottom: '1em',
+                }}>Login Form</Typography>
       <form>
         <Grid container spacing={2}>
           <Grid item xs={12}>

@@ -7,6 +7,8 @@ const RegisterForm = () => {
   const [email, setEmail] = useState('');
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [error, setError] = useState(null);
+
 
   const handleEmailChange = (e) => {
     setEmail(e.target.value);
@@ -37,12 +39,37 @@ const RegisterForm = () => {
       }
     } catch (error) {
       console.error('An error occurred during registration:', error);
+      if (error.response && error.response.status === 400) {
+         if (error.response.data.password) {
+          setError('Password should be at least 8 characters long.');
+        } else {
+          setError('An error occurred during registration. Please ensure that your email is not already in use on our site and try again.');
+        }
+      } else {
+        setError('An error occurred during registration. Please ensure that your email is not already in use on our site and try again.');
+      }
     }
   };
 
   return (
     <Box >
-      <Typography variant="h6">Register Form</Typography>
+      {error && (
+        <Typography variant="body1" style={{ color: 'red', textAlign: 'center', paddingBottom: '2em', }}>
+          {error}
+        </Typography>
+      )}
+      <Typography variant="h4" style={{
+                color: 'white',
+                textAlign: 'center',
+                display: 'block',
+                paddingBottom: '2em',
+                }}>  After a successful registration, the page will transfer you to the login page. </Typography>
+      <Typography variant="h6" style={{
+                color: 'white',
+                textAlign: 'center',
+                display: 'block',
+                paddingBottom: '1em',
+                }}>Register Form</Typography>
       <form>
         <Grid container spacing={2}>
           <Grid item xs={12}>
