@@ -88,8 +88,9 @@ class UserProfileAPIView(APIView):
             else:
                 uploaded_photos = uploaded_photos.split(',')
 
-            # Update the uploaded_photos field
-            user.uploaded_photos.extend(uploaded_photos)
+            new_photos = [photo for photo in uploaded_photos if photo not in user.uploaded_photos]
+
+            user.uploaded_photos.extend(new_photos)
             user.save()
 
             return Response({'message': 'Uploaded photos updated successfully.'})

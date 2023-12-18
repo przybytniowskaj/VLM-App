@@ -118,11 +118,6 @@ const UploadFromDevice = ({ closeModal, setSearch }) => {
     const [userUploadedPhotos, setUserUploadedPhotos] = useState([]);
     const [textInputValue, setTextInputValue] = useState('');
 
-    
-
-
-
-
     const handleSelectImage = async (imageFileName) => {
       const newFiles = [];
       for (const fileName of imageFileName) {
@@ -134,13 +129,17 @@ const UploadFromDevice = ({ closeModal, setSearch }) => {
       setFiles(newFiles);
     };
 
-
     const handleTextChange = (event) => {
       setTextInputValue(event.target.value);
     };
 
     const handleEnterKeyPress = (event) => {
       if (event.key === 'Enter') {
+        const userToken = localStorage.getItem('Token');
+        if (userToken) {
+          fetchUserUploadedPhotos(userToken);
+        }
+        handleSelectImage(userUploadedPhotos);
         sendData();
       }
     };
@@ -230,6 +229,9 @@ const UploadFromDevice = ({ closeModal, setSearch }) => {
         <Box>
   {userUploadedPhotos.length > 0 && (
     <Box display="flex" flexDirection="column" alignItems="center" justifyContent="center" padding={2}>
+      <Grid item xs={12} padding={4}>
+        {isLoading && (<LinearProgress color='success' data-aos='zoom-out'/> )}
+      </Grid>
       <Typography variant="h6" style={{ marginBottom: '1em', color: 'white' , fontWeight: 'bold' }}>
         YOUR PHOTOS:
       </Typography>

@@ -143,7 +143,7 @@ const Classifier = () => {
     if (secondSearch) {
       for (let i = 0; i < images.length; i++) {
         const imageFileName = images[i].image;
-        const response = await fetch(`http://127.0.0.1:8000/${imageFileName}`);
+        const response = await fetch(`http://127.0.0.1:8000${imageFileName}`); // tu usunełam też 
         const imageBlob = await response.blob();
         const imageFile = new File([imageBlob], imageFileName, { type: 'image/*' });
         formData.append('images', imageFile);
@@ -241,6 +241,8 @@ const Classifier = () => {
           <Button variant="contained" color="primary" onClick={setToDefault} style={{ width: '80%', height: '40%', margin: '4% auto', flexGrow: 1 }}>
             <Typography variant='h6'>Search from Flickr images</Typography>
           </Button>
+          {sentData &&(
+          <Typography variant='h6' style={{ color: 'white'}}>Help improve machine learning models: </Typography>)}
           {sentData && !showSelection && (<Button variant="contained" color="primary" onClick={displayBest} style={{ width: '50%', height: '20%', margin: '4% auto', flexGrow: 1 }}>
             <Typography variant='h6'>Choose best matches</Typography>
           </Button>)}
@@ -279,7 +281,7 @@ const Classifier = () => {
                   }}
                 >
                   <img
-                      src={`http://127.0.0.1:8000/${images[index].image}`}
+                      src={`http://127.0.0.1:8000${images[index].image}`}  // usunełam tu też
                       alt={`Image ${index + 1}`}
                       style={{
                         width: '100%', // Ensure the image takes up the full width of the container
@@ -311,9 +313,9 @@ const Classifier = () => {
                     overflow: 'hidden',
                   }}
                 >
-                  <a href={`http://127.0.0.1:8000/${images[index].image}`} target="_blank" rel="noopener noreferrer">
+                  <a href={`http://127.0.0.1:8000${images[index].image}`} target="_blank" rel="noopener noreferrer"> 
                     <img
-                      src={`http://127.0.0.1:8000${images[index].image}`} // Mi tu nie działało wystwietlanie jak było tak jak wcześniej
+                      src={`http://127.0.0.1:8000${images[index].image}`} // Mi tu nie działało wystwietlanie jak było tak jak wcześniej i tam dwie linijki wyżej
                       style={{ width: '100%', height: '100%', display: 'block', }}
                     />
                   </a>
