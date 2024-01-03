@@ -193,13 +193,13 @@ const Classifier = () => {
     const feedbackData = [];
     selectedIndexes.forEach(index => {
         feedbackData.push({
-            image_path: files[0].path,  
+            image_path: files[0].path || files[0].name.split('/').pop(),  
             caption: generatedText[index],
         });
     });
     if (userSuggestion !== '') {
       feedbackData.push({
-          image_path: files[0].path,
+          image_path: files[0].path  || files[0].name.split('/').pop(),
           caption: userSuggestion,
       });
     }
