@@ -8,6 +8,7 @@ import CustomModal from './uploadWindow';
 const Classifier = () => {
   const theme = useTheme();
   const [textInputValue, setTextInputValue] = useState('');
+  const [isFlickr, setIsFlickr] = useState(false);
   const [isModalOpen, setModalOpen] = useState(false);
   const [initialTab, setInitialTab] = useState(0); 
   const [result, setResult] = useState(null);
@@ -78,7 +79,9 @@ const Classifier = () => {
         setTextInputValue(response.data.query);
         setImages(response.data.images);
         setFeatures(response.data.image_features);
-        uploadPhotos(response.data.images);
+        if (!isFlickr) { 
+          uploadPhotos(response.data.images);
+        }
         const newResult = response.data.result
         if (newResult === "") {
           setResult([]);
@@ -208,6 +211,21 @@ const Classifier = () => {
     }
   };
 
+  const handleClickUploadFromDevice = () => {
+    openModal(0)
+    setIsFlickr(false)
+  }
+
+  const handleClickUploadFromCatalog = () => {
+    openModal(1)
+    setIsFlickr(false)
+  }
+
+  const handleClickSearchFromFlickr = () => {
+    setToDefault()
+    setIsFlickr(true)
+  }
+
 
   return (
     <>
@@ -243,13 +261,13 @@ const Classifier = () => {
               },
             }}          
           />
-          <Button variant="contained" disableElevation={true} color="primary" onClick={() => openModal(0)} style={{ width: '80%', height: '40%', margin: '4% auto', flexGrow: 1 }}>
+          <Button variant="contained" disableElevation={true} color="primary" onClick={handleClickUploadFromDevice} style={{ width: '80%', height: '40%', margin: '4% auto', flexGrow: 1 }}>
             <Typography variant='h6'>Upload photos from device</Typography>
           </Button>
-          <Button variant="contained" color="primary" onClick={() => openModal(1)} style={{ width: '80%', height: '40%', margin: '4% auto', flexGrow: 1 }}>
+          <Button variant="contained" color="primary" onClick={handleClickUploadFromCatalog} style={{ width: '80%', height: '40%', margin: '4% auto', flexGrow: 1 }}>
             <Typography variant='h6'>Choose photos from catalog</Typography>
           </Button>
-          <Button variant="contained" color="primary" onClick={setToDefault} style={{ width: '80%', height: '40%', margin: '4% auto', flexGrow: 1 }}>
+          <Button variant="contained" color="primary" onClick={handleClickSearchFromFlickr} style={{ width: '80%', height: '40%', margin: '4% auto', flexGrow: 1, border: isFlickr ? "2px solid white" : "none",}}>
             <Typography variant='h6'>Search from Flickr images</Typography>
           </Button>
           {sentData &&(
@@ -310,7 +328,7 @@ const Classifier = () => {
                       src={`http://127.0.0.1:8000${images[index].image}`}  // usunełam tu też
                       alt={`Image ${index + 1}`}
                       style={{
-                        width: '100%', // Ensure the image takes up the full width of the container
+                        width: '100%', 
                         height: '100%',
                         display: 'block',
                       }}
