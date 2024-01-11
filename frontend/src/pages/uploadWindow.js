@@ -88,6 +88,7 @@ const UploadFromDevice = ({ closeModal, setSearch }) => {
                   textAlign: 'center',
                   display: 'block',
                   paddingBottom: '2em',
+                  fontSize: '19px'
                 }}
             >Please press enter to start your search</Typography>
             </Grid>

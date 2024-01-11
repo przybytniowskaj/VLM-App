@@ -17,7 +17,7 @@ const CopyButton = ({ text, onSelect, onDeselect, selected }) => {
     navigator.clipboard.writeText(text);
     setIsCopied(true);
     onSelect(); // Notify parent component that this button is selected
-    alert(`Text "${text}" is copied to the clipboard!`);
+    // alert(`Text "${text}" is copied to the clipboard!`);
   };
 
   const handleDeselect = () => {
@@ -34,7 +34,7 @@ const CopyButton = ({ text, onSelect, onDeselect, selected }) => {
         textAlign: 'center',
         color: 'white',
         userSelect: 'all',
-        border: isCopied ? '1.5px solid white' : '1px solid darkgrey',
+        border: isCopied ? '2.5px solid white' : '1px solid darkgrey',
         textTransform: 'none', 
         padding:"3%"
       }}
@@ -230,10 +230,10 @@ const Classifier = () => {
               height="80%"
             >
               <Button variant="contained" color="primary" onClick={() => openModal(0)} style={{ width: '80%', height: '30%', margin: '6% auto', flexGrow: 1 }}>
-                <Typography variant='h6'>Upload photos from device</Typography>
+                <Typography variant='h6' style={{fontSize: '18px'}} >Upload photos from device</Typography>
               </Button>
               <Button variant="contained" color="primary" onClick={() => openModal(1)} style={{ width: '80%', height: '30%', margin: '6% auto', flexGrow: 1 }}>
-                <Typography variant='h6'>Choose photos from catalog</Typography>
+                <Typography variant='h6' style={{fontSize: '18px'}}>Choose photos from catalog</Typography>
               </Button>
             </Box>
           </Grid>
@@ -357,31 +357,41 @@ const Classifier = () => {
             <Grid item container xs={8} md={5} marginLeft={"28%"} position="fixed" style={{ height: '100%'}} >
               <Box display="flex" flexDirection="column" alignItems="center" justifyContent="space-evenly" width="80%" height="68%" >
                 <CopyButton
-                  text={capitalizeFirstLetter(generatedText[0])}
+                  text={<span style={{ fontSize: '16px' }}>
+                  {capitalizeFirstLetter(generatedText[0])}
+                </span>}
                   onSelect={() => handleSelect(0)}
                   onDeselect={() => handleDeselect(0)}
                   selected={selectedIndexes.includes(0)}
                 />
                 <CopyButton
-                  text={capitalizeFirstLetter(generatedText[1])}
+                  text={<span style={{ fontSize: '16px' }}>
+                  {capitalizeFirstLetter(generatedText[1])}
+                </span>}
                   onSelect={() => handleSelect(1)}
                   onDeselect={() => handleDeselect(1)}
                   selected={selectedIndexes.includes(1)}
                 />
                 <CopyButton
-                  text={capitalizeFirstLetter(generatedText[2])}
+                  text={<span style={{ fontSize: '16px' }}>
+                  {capitalizeFirstLetter(generatedText[2])}
+                </span>}
                   onSelect={() => handleSelect(2)}
                   onDeselect={() => handleDeselect(2)}
                   selected={selectedIndexes.includes(2)}
                 />
                 <CopyButton
-                  text={capitalizeFirstLetter(generatedText[3])}
+                  text={<span style={{ fontSize: '16px' }}>
+                  {capitalizeFirstLetter(generatedText[3])}
+                </span>}
                   onSelect={() => handleSelect(3)}
                   onDeselect={() => handleDeselect(3)}
                   selected={selectedIndexes.includes(3)}
                 />
                 <CopyButton
-                  text={capitalizeFirstLetter(generatedText[4])}
+                  text={<span style={{ fontSize: '16px' }}>
+                  {capitalizeFirstLetter(generatedText[4])}
+                </span>}
                   onSelect={() => handleSelect(4)}
                   onDeselect={() => handleDeselect(4)}
                   selected={selectedIndexes.includes(4)}
@@ -398,6 +408,12 @@ const Classifier = () => {
                     border: '0.1px solid white',
                     borderRadius: '5px',
                     backgroundColor: 'transparent',
+                  }}
+                  InputProps={{
+                    style: {
+                      color: 'white',
+                      fontSize: '16px'
+                    },
                   }}
                 />
               <Box  display="flex" justifyContent="space-between" fullWidth marginBottom={-3}> 

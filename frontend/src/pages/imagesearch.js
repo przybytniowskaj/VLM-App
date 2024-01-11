@@ -262,13 +262,13 @@ const Classifier = () => {
             }}          
           />
           <Button variant="contained" disableElevation={true} color="primary" onClick={handleClickUploadFromDevice} style={{ width: '80%', height: '40%', margin: '4% auto', flexGrow: 1 }}>
-            <Typography variant='h6'>Upload photos from device</Typography>
+            <Typography variant='h6' style={{fontSize: '18px'}} >Upload photos from device</Typography>
           </Button>
           <Button variant="contained" color="primary" onClick={handleClickUploadFromCatalog} style={{ width: '80%', height: '40%', margin: '4% auto', flexGrow: 1 }}>
-            <Typography variant='h6'>Choose photos from catalog</Typography>
+            <Typography variant='h6' style={{fontSize: '18px'}} >Choose photos from catalog</Typography>
           </Button>
           <Button variant="contained" color="primary" onClick={handleClickSearchFromFlickr} style={{ width: '80%', height: '40%', margin: '4% auto', flexGrow: 1, border: isFlickr ? "2px solid white" : "none",}}>
-            <Typography variant='h6'>Search from Flickr images</Typography>
+            <Typography variant='h6' style={{fontSize: '18px'}} >Search from Flickr images</Typography>
           </Button>
           {sentData &&(
           <Typography variant='h6' style={{ color: 'white'}}>Help improve machine learning models: </Typography>)}
