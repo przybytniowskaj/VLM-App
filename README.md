@@ -1,6 +1,8 @@
-# VLM-LLM-App
+# VLM-App
 
 In today's rapidly developing technology, the focus is on developing innovative solutions that overcome the limitations of previous implementations. However, what is becoming forgotten is their proper presentation to people unconnected with the development of artificial intelligence and technology. Solutions are created, described in papers and presented at conferences, but only some have dedicated demos and even fewer are used to create free applications and seamlessly support users. Our application stands out by prioritizing user-friendly interaction with advanced Visual-Language models. With an emphasis on visual language modelling, we present a web application that integrates the CLIP model for semantic image retrieval and BLIP for image captioning. The implementation we have created not only makes artificial intelligence more accessible but also promotes continuous improvement of Machine Learning models by saving user suggestions for generated predictions. 
+
+The official paper describing architecture and functionalities is attached in pdf format. 
 
 
 # Installation Instruction
